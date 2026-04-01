@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fale Conosco | Fatal Lady</title>
+
+    <link
+      rel="icon"
+      href="/static/uploads/img/main_icon/icon.png"
+      type="image/png"
+    />
+
+    <!-- CSS base do site -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/home-style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/layout-responsive.css') }}"
+    />
+
+    <!-- CSS específico da página -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/faleconosco.css') }}"
+    />
+  </head>
+
+  <body data-is-authenticated="{% if usuario %}true{% else %}false{% endif %}">
+    {% include '_header_nav.html' %}
+
+    <main class="conteudo">
+      <section class="contato-wrapper">
+        <header class="contato-header">
+          <h1>Fale Conosco</h1>
+          <p>
+            Precisa de ajuda com seu pedido, trocas, dúvidas sobre produtos ou
+            qualquer outro assunto? Envie uma mensagem para o nosso time de
+            atendimento.
+          </p>
+        </header>
+
+        <div class="contato-grid">
+          <section class="contato-form">
+            <h2>Envie sua mensagem</h2>
+
+            <form action="/faleconosco" method="post" class="form-contato">
+              <div class="form-group">
+                <label for="nome">Nome completo</label>
+                <input
+                  type="text"
+                  id="nome"
+                  name="nome"
+                  placeholder="Digite seu nome"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email">E-mail</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Digite seu e-mail"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="assunto">Assunto</label>
+                <input
+                  type="text"
+                  id="assunto"
+                  name="assunto"
+                  placeholder="Sobre o que você precisa?"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="mensagem">Mensagem</label>
+                <textarea
+                  id="mensagem"
+                  name="mensagem"
+                  rows="5"
+                  placeholder="Descreva sua dúvida, problema ou solicitação"
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                Enviar mensagem
+              </button>
+            </form>
+          </section>
+
+          <aside class="contato-info">
+            <h2>Outros canais</h2>
+            <p>
+              Você também pode acompanhar novidades, lançamentos e condições
+              especiais nos nossos canais oficiais:
+            </p>
+
+            <ul class="contato-list">
+              <li>
+                <strong>E-mail:</strong>
+                <a href="mailto:atendimento@fatallady.com.br"
+                  >atendimento@fatallady.com.br</a
+                >
+              </li>
+              <li>
+                <strong>WhatsApp:</strong>
+                <a href="https://wa.me/5500000000000" target="_blank"
+                  >(00) 00000-0000</a
+                >
+              </li>
+              <li>
+                <strong>Instagram:</strong>
+                <a
+                  href="https://www.instagram.com/fatallady"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >@fatallady</a
+                >
+              </li>
+            </ul>
+
+            <div class="contato-highlight">
+              <h3>Horário de atendimento</h3>
+              <p>Segunda a sexta, das 9h às 18h (exceto feriados).</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="footer-links">
+        <div>
+          <h4>Minha Conta</h4>
+          <a href="/me/dados">Meus Dados</a>
+          <a href="/me/meus-pedidos">Meus Pedidos</a>
+          <a href="/me/painel">Cashback</a>
+          <a href="/login">Login</a>
+        </div>
+
+        <div>
+          <h4>Suporte e Políticas</h4>
+          <a href="/politicas/trocas/devolucoes">Trocas e Devoluções</a>
+          <a href="/faq">Dúvidas Frequentes</a>
+          <a href="/faleconosco">Fale Conosco</a>
+          <a href="/privacy">Política de Privacidade</a>
+        </div>
+        <div>
+          <h4>Formas de Pagamento</h4>
+          <img
+            src="/static/uploads/img/catalogo/footer/payment.png"
+            alt="Formas de Pagamento"
+          />
+        </div>
+      </div>
+      <hr />
+      <p class="copy">
+        Coffe and Code | © 2025 Todos os direitos reservados
+      </p>
+    </footer>
+  </body>
+</html>

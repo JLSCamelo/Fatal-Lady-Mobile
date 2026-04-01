@@ -1,0 +1,157 @@
+/* DÚVIDAS FREQUENTES - Fatal Lady */
+
+:root {
+  --background: #e6e2dc;
+  --main-red: #cb1313;
+  --light-red: #ff1111;
+  --light-gray: #b8ad9d;
+  --dark-gray: #191919;
+}
+
+/* Área geral de conteúdo */
+main.conteudo {
+  background: white; /* deixa o bloco central em destaque sobre o background global */
+  padding: 3.5rem 1.5rem 4rem;
+}
+
+/* Wrapper do FAQ */
+section.faq {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Cabeçalho */
+.faq-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.faq-header h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--dark-gray);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.faq-header p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* Lista de dúvidas - aproveita conceito visual já usado na home */
+.faq .faq-list {
+  max-width: 900px;
+  margin: 0 auto 2.5rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Cada item */
+.faq .faq-item {
+  background: var(--background);
+  border-radius: 10px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-left-color 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.faq .faq-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+  border-left-color: var(--main-red);
+}
+
+.faq .faq-item h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dark-gray);
+  margin-bottom: 0.5rem;
+}
+
+.faq .faq-item p {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* Links internos */
+.faq .faq-item a {
+  color: var(--main-red);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(203, 19, 19, 0.25);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.faq .faq-item a:hover {
+  color: var(--light-red);
+  border-color: rgba(255, 17, 17, 0.5);
+}
+
+/* Bloco de call to action final */
+.faq-extra {
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  padding: 1.6rem 1.6rem;
+  border-radius: 12px;
+  background: #191919;
+  color: #f7f3ec;
+  text-align: center;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.17);
+}
+
+.faq-extra h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.faq-extra p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.faq-extra a {
+  color: #ffe0e0;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.faq-extra a:hover {
+  color: var(--light-red);
+  border-color: rgba(255, 17, 17, 0.7);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  main.conteudo {
+    padding: 2.8rem 1rem 3.2rem;
+  }
+
+  .faq-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .faq .faq-item {
+    padding: 1.3rem 1.3rem;
+  }
+
+  .faq-extra {
+    padding: 1.4rem 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-header h1 {
+    font-size: 1.45rem;
+  }
+}

@@ -1,0 +1,589 @@
+@import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-image: url("../uploads/img/login/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #e6dcdc;
+  font-family: "Questrial", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8.5rem;
+}
+
+:root {
+  --background: #e6e2dc;
+  --main-red: #cb1313;
+  --light-red: #ff1111;
+  --light-gray: #b8ad9d;
+  --dark-gray: #191919;
+  --card-bg: #ffffff;
+  --muted: #6b6b6b;
+  --text: #111111;
+  --radius: 12px;
+}
+
+.text-btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.92rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 4rem;
+  align-items: center;
+  min-height: calc(100vh - 280px);
+  padding: 1rem 0;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  color: #f8f8f8;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+
+.hero > p {
+  color: #dfdfdf;
+  max-width: 46ch;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.benefits {
+  margin-top: 2rem;
+}
+
+.benefits h3 {
+  font-size: 1.3rem;
+  letter-spacing: 1.55px;
+  color: #f8f8f8;
+}
+
+.benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  font-size: 1rem;
+  color: #dfdfdf;
+}
+
+.benefits li svg {
+  flex-shrink: 0;
+  color: var(--main-red);
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(17, 17, 17, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+}
+
+.login-card h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input-row label {
+  font-size: 0.95rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Password wrapper with toggle button */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .input-field {
+  width: 100%;
+  padding-right: 3rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: color 0.2s ease;
+  border-radius: 6px;
+}
+
+.toggle-password:hover {
+  color: var(--main-red);
+  background: rgba(203, 19, 19, 0.05);
+}
+
+.toggle-password:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.toggle-password svg {
+  pointer-events: none;
+}
+
+.input-field {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  font-size: 1rem;
+  font-family: "Questrial", sans-serif;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--main-red);
+  box-shadow: 0 0 0 3px rgba(203, 19, 19, 0.1);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.remember {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.remember input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.link {
+  color: var(--main-red);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--light-red);
+  text-decoration: underline;
+}
+
+.btn-primary {
+  background: var(--main-red);
+  color: #fff;
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(203, 19, 19, 0.2);
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-primary:hover {
+  background: var(--light-red);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(203, 19, 19, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 1.5rem 0 1rem;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.04),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.04)
+  );
+}
+
+.divider span {
+  position: relative;
+  background: var(--card-bg);
+  padding: 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.socials {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.social-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.social-btn:hover {
+  background: #f8f8f8;
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ================== ESTADOS DE ERRO - LOGIN ================== */
+
+/* borda vermelha + leve glow para campo inválido */
+.input-field.is-invalid {
+  border-color: var(--main-red);
+  box-shadow: 0 0 0 3px rgba(203, 19, 19, 0.15);
+}
+
+/* animação de "balanço" no wrapper da senha */
+.password-wrapper.shake .input-field {
+  animation: field-shake 0.28s ease-in-out;
+}
+
+@keyframes field-shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* texto de erro logo abaixo do campo de senha */
+.field-error-message {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--main-red);
+}
+
+/* garante layout correto do texto do toast */
+.toast .text {
+  flex: 1;
+}
+
+.footer-login {
+  padding: 2rem 1rem 1rem;
+  margin-top: auto;
+  background: var(--dark-gray);
+  opacity: 0.9;
+}
+
+.footer-links-2 {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-links-2 > div {
+  min-width: 150px;
+}
+
+.footer-links-2 h4 {
+  margin-bottom: 0.8rem;
+  color: var(--background);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.footer-links-2 a {
+  display: block;
+  color: var(--muted);
+  text-decoration: none;
+  margin: 0.4rem 0;
+  transition: color 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.footer-links-2 a:hover {
+  color: var(--main-red);
+}
+
+.footer-login img {
+  max-width: 180px;
+  height: auto;
+}
+
+.footer-login hr {
+  width: 100%;
+  margin: 1.5rem 0 1rem;
+  border: none;
+  height: 1px;
+  background: rgba(163, 163, 163, 0.08);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.copy {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+@media (max-width: 1024px) {
+  .page-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+
+  .hero {
+    text-align: center;
+  }
+
+  .hero > p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .benefits {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .benefits ul {
+    max-width: 400px;
+  }
+
+  .login-wrapper {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero > p {
+    font-size: 1rem;
+  }
+
+  .login-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .page-grid {
+    padding: 1.5rem 0;
+  }
+}
+
+@media (max-width: 520px) {
+  #side-panel {
+    width: 280px;
+    max-width: 92vw;
+  }
+
+  .login-card {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .login-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .socials {
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .benefits li {
+    font-size: 0.95rem;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* --- Estilos para o Container do Pop-up (opcional, mas recomendado) --- */
+/* Se você quiser um container para organizar múltiplos toasts */
+#pop-up-container {
+  position: fixed;
+  top: 70px; /* Distância do topo */
+  right: 20px; /* Distância da direita */
+  z-index: 1000; /* Garante que ficará acima de outros elementos */
+  display: flex;
+  flex-direction: column; /* Para empilhar vários toasts */
+  gap: 10px; /* Espaço entre múltiplos toasts */
+  pointer-events: none; /* Permite cliques através do container para elementos abaixo */
+}
+
+/* --- Estilos para o Toast Individual --- */
+.toast {
+  position: relative; /* Para posicionar o botão de fechar */
+  background-color: #333; /* Cor de fundo padrão */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 250px;
+  max-width: 350px;
+  font-family: Arial, sans-serif; /* Ou sua fonte preferida */
+  font-size: 15px;
+
+  /* Propriedades de animação (inicia fora da tela, esconde por padrão) */
+  opacity: 0;
+  transform: translateX(100%); /* Começa fora da tela à direita */
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  pointer-events: all; /* Permite interação com o toast em si */
+}
+
+/* Estado visível (adicionado pelo JS) */
+.toast.show {
+  opacity: 1;
+  transform: translateX(0); /* Desliza para dentro da tela */
+}
+
+/* --- Estilos para o Toast de ERRO --- */
+.toast.error {
+  background-color: #dc3545; /* Vermelho para erro */
+  border-left: 5px solid #bd2130; /* Borda esquerda destacada */
+}
+
+/* --- Estilos para o Botão de Fechar --- */
+.toast .close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin-left: 15px;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease-in-out;
+}
+
+.toast .close:hover {
+  color: #f0f0f0;
+}

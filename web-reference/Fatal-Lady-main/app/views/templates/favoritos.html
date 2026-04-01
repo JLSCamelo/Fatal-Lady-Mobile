@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Favoritos | Fatal Lady</title>
+    <link
+      rel="icon"
+      href="/static/uploads/img/main_icon/icon.png"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/favoritos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/home-style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/layout-responsive.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/cart-badge.css') }}"
+    />
+  </head>
+
+  <body data-is-authenticated="{% if usuario %}true{% else %}false{% endif %}">
+    {% include "_header_nav.html" %}
+
+    <main id="main" class="favorites-container" role="main">
+      <section id="favorites-page" class="favorites-wrapper">
+        <div class="container">
+          <header class="favorites-header" aria-hidden="false">
+            <h1>Meus Favoritos</h1>
+            <p>Veja os produtos que você salvou na Fatal Lady.</p>
+          </header>
+
+          {% if not favoritos or favoritos|length == 0 %}
+          <div class="favorites-empty">
+            <img
+              src="/static/uploads/img/carrinho/kart_alert.png"
+              alt="Nenhum favorito"
+            />
+            <h3>Você ainda não tem favoritos.</h3>
+            <p>
+              Explore o catálogo e clique no coração para salvar seus produtos
+              preferidos.
+            </p>
+            <a href="/produtos" class="btn-outline">
+              Ver catálogo
+            </a>
+          </div>
+          {% else %}
+          <div class="favorites-meta">
+            <span>{{ favoritos|length }} produto(s) salvo(s)</span>
+            <a href="/produtos" class="favorites-link">
+              Continuar comprando
+            </a>
+          </div>
+
+          <div class="favorites-grid">
+            {% for produto in favoritos %}
+            <article class="favorite-card">
+              <div class="favorite-media">
+                <a
+                  href="/produto-get/{{ produto.id_produto }}"
+                  class="favorite-media-link"
+                >
+                  <img
+                    src="{{ produto.caminhoimagem or '/static/uploads/img/catalogo/products/default.png' }}"
+                    alt="{{ produto.nome }}"
+                    loading="lazy"
+                  />
+                </a>
+
+                <span class="favorite-badge">&#10084;</span>
+              </div>
+
+              <div class="favorite-body">
+                <span class="favorite-category">
+                  {{ produto.categoria_nome or 'Coleção Fatal Lady' }}
+                </span>
+
+                <h3 class="favorite-name">
+                  {{ produto.nome }}
+                </h3>
+
+                <div class="favorite-meta-row">
+                  <div class="favorite-price">
+                    R$
+                    <span class="favorite-price-value">
+                      {{ "%.2f"|format(produto.preco)|replace('.', ',') }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="favorite-actions">
+                  <form
+                    action="{{ url_for('delete_favorite', id_produto=produto.id_produto) }}"
+                    method="post"
+                  >
+                    <button type="submit" class="favorite-remove-btn">
+                      Remover
+                    </button>
+                  </form>
+
+                  <form
+                    action="/produto-get/{{ produto.id_produto }}"
+                    method="get"
+                  >
+                    <button
+                      type="submit"
+                      class="favorite-cart-btn"
+                      aria-label="Ver {{ produto.nome }}"
+                    >
+                      Ver produto
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="footer-links">
+        <div>
+          <h4>Minha Conta</h4>
+          <a href="/me/dados">Meus Dados</a>
+          <a href="/me/meus-pedidos">Meus Pedidos</a>
+          <a href="/me/painel">Cashback</a>
+          <a href="/login">Login</a>
+        </div>
+
+        <div>
+          <h4>Suporte e Políticas</h4>
+          <a href="/politicas/trocas/devolucoes">Trocas e Devoluções</a>
+          <a href="/faq">Dúvidas Frequentes</a>
+          <a href="/faleconosco">Fale Conosco</a>
+          <a href="/privacy">Política de Privacidade</a>
+        </div>
+        <div>
+          <h4>Formas de Pagamento</h4>
+          <img
+            src="/static/uploads/img/catalogo/footer/payment.png"
+            alt="Formas de Pagamento"
+          />
+        </div>
+      </div>
+      <hr />
+      <p class="copy">
+        Coffe and Code | © 2025 Todos os direitos reservados
+      </p>
+    </footer>
+
+    <script src="/static/js/cart-badge.js" defer></script>
+  </body>
+</html>

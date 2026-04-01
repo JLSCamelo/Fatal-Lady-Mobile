@@ -1,0 +1,56 @@
+from sqlalchemy import Column, Integer, Float, ForeignKey, Date, String
+from app.database import * 
+from datetime import datetime
+# import sql puro para add uma nova coluna
+# from sqlalchemy import text
+# from models.usuario_model import UsuarioDB
+from sqlalchemy.orm import relationship
+
+from sqlalchemy import Column, Integer, Float, ForeignKey, Date, String
+from sqlalchemy.orm import relationship
+
+#tabela Pedido
+class PedidoDB(Base):
+    __tablename__ = "pedidos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    id_cliente = Column(Integer, ForeignKey("usuarios.id_cliente",  ondelete="CASCADE")) 
+    data = Column(Date, default=datetime.utcnow)
+    status = Column(String, default="Processo")
+    valortotal = Column(Float, default=0.0)
+    valorfrete = Column(Float, default=0.0)
+
+    #relacionamento
+    pagamentos = relationship("PagamentoDB", back_populates="pedido")
+    usuario = relationship("UsuarioDB", back_populates="pedidos")
+    itens = relationship("ItemPedidoDB", back_populates="pedido", cascade="all, delete-orphan")
+
+# tabela ItemPedido
+class ItemPedidoDB(Base):
+    __tablename__ = "itens_pedido"
+
+    id = Column(Integer, primary_key=True, index=True)
+    pedido_id = Column(Integer, ForeignKey("pedidos.id"))
+    produto_id = Column(Integer, ForeignKey("produtos.id_produto", ondelete="RESTRICT"), nullable=False)
+
+    nome_produto = Column(String, nullable=False)
+    preco_unitario = Column(Float, nullable=False)
+    quantidade = Column(Integer, nullable=False)
+    tamanho = Column(Integer)
+
+    produto = relationship("ProdutoDB", back_populates="itens_pedido")
+    pedido = relationship("PedidoDB", back_populates="itens")
+
+
+
+
+#Usado para adiciona coluna sem deletar a tabela
+# with engine.connect() as conexao:
+#    conexao.execute(te("""
+# ALTER TABLE usuarios ADD COLUMN is_admin BOOLEAN DEFAULT 0"""))
+"""
+db = SessionLocal()
+admin=Usuario(nome="admin",email="admin@loja.com",senha=gerar_hash_senha("123456"),is_admin=True)
+db.add(admin)
+db.commit()
+"""

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagamento Seguro | Pedido #{{ pedido.id }}</title>
+  <link rel="icon" href="/static/uploads/img/main_icon/icon.png" type="image/png" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/home-style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/pagamentos-style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', path='css/layout-responsive.css') }}" />
+</head>
+
+  <body data-is-authenticated="{% if usuario %}true{% else %}false{% endif %}">
+    {% include '_header_nav.html' %}
+
+  <main class="pagamentos-container">
+    <div class="pagamentos-wrapper">
+
+      <header class="pagamentos-header">
+        <h1>Finalizar Pagamento</h1>
+        <div class="pedido-info">
+          <div class="pedido-info-item">
+            <span class="pedido-info-label">Pedido</span>
+            <span class="pedido-info-value">#{{ pedido.id }}</span>
+          </div>
+          <div class="pedido-info-item">
+            <span class="pedido-info-label">Total</span>
+            <span class="pedido-info-value">R$ {{ "%.2f"|format(pedido.valortotal) }}</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="pagamentos-content">
+
+        <aside class="metodos-sidebar">
+          <h2>Escolha o método</h2>
+          <div class="metodos-list">
+            <a href="/pagamentos/cartao-credito?pedido_id={{ pedido.id }}" 
+               class="metodo-btn {% if tipo_pagamento_selecionado == 'cartao_credito' %}active{% endif %}">
+              <span class="metodo-icon">💳</span>
+              <span>Cartão de Crédito</span>
+            </a>
+            <a href="/pagamentos/cartao-debito?pedido_id={{ pedido.id }}" 
+               class="metodo-btn {% if tipo_pagamento_selecionado == 'cartao_debito' %}active{% endif %}">
+              <span class="metodo-icon">💳</span>
+              <span>Cartão de Débito</span>
+            </a>
+            <a href="/pagamentos/pix?pedido_id={{ pedido.id }}" 
+               class="metodo-btn {% if tipo_pagamento_selecionado == 'pix' %}active{% endif %}">
+              <span class="metodo-icon">📱</span>
+              <span>PIX</span>
+            </a>
+            <a href="/pagamentos/boleto?pedido_id={{ pedido.id }}" 
+               class="metodo-btn {% if tipo_pagamento_selecionado == 'boleto' %}active{% endif %}">
+              <span class="metodo-icon">🧾</span>
+              <span>Boleto Bancário</span>
+            </a>
+          </div>
+        </aside>
+
+        <section class="pagamento-form-area">
+
+          {% if tipo_pagamento_selecionado == 'cartao_credito' %}
+          <div class="form-header">
+            <div class="form-header-icon">💳</div>
+            <div class="form-header-text">
+              <h2>Cartão de Crédito</h2>
+              <p>Preencha os dados do seu cartão com segurança</p>
+            </div>
+          </div>
+          <form action="/pagamentos/cartao-credito" method="post" class="pagamento-form">
+            <input type="hidden" name="pedido_id" value="{{ pedido.id }}" />
+            
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Número do Cartão</label>
+                <input type="text" name="numero_cartao" placeholder="0000 0000 0000 0000" maxlength="19" required />
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Nome do Titular</label>
+                <input type="text" name="nome_titular" placeholder="Nome como no cartão" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Validade</label>
+                <input type="text" name="validade" placeholder="MM/AA" maxlength="5" required />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="password" name="cvv" placeholder="•••" maxlength="4" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Parcelas</label>
+                <select name="parcelas" required>
+                  <option value="1">1x de R$ {{ "%.2f"|format(pedido.valortotal) }}</option>
+                  <option value="2">2x de R$ {{ "%.2f"|format(pedido.valortotal / 2) }}</option>
+                  <option value="3">3x de R$ {{ "%.2f"|format(pedido.valortotal / 3) }}</option>
+                  <option value="4">4x de R$ {{ "%.2f"|format(pedido.valortotal / 4) }}</option>
+                  <option value="5">5x de R$ {{ "%.2f"|format(pedido.valortotal / 5) }}</option>
+                  <option value="6">6x de R$ {{ "%.2f"|format(pedido.valortotal / 6) }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Bandeira</label>
+                <select name="bandeira" required>
+                  <option value="">Selecione</option>
+                  <option value="visa">Visa</option>
+                  <option value="mastercard">Mastercard</option>
+                  <option value="elo">Elo</option>
+                  <option value="amex">American Express</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="form-submit">
+              <span>Finalizar Pagamento</span>
+            </button>
+          </form>
+
+          {% elif tipo_pagamento_selecionado == 'cartao_debito' %}
+          <div class="form-header">
+            <div class="form-header-icon">💳</div>
+            <div class="form-header-text">
+              <h2>Cartão de Débito</h2>
+              <p>Pagamento à vista com desconto instantâneo</p>
+            </div>
+          </div>
+          <form action="/pagamentos/cartao-debito" method="post" class="pagamento-form">
+            <input type="hidden" name="pedido_id" value="{{ pedido.id }}" />
+            
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Número do Cartão</label>
+                <input type="text" name="numero_cartao" placeholder="0000 0000 0000 0000" maxlength="19" required />
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Nome do Titular</label>
+                <input type="text" name="nome_titular" placeholder="Nome como no cartão" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Validade</label>
+                <input type="text" name="validade" placeholder="MM/AA" maxlength="5" required />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="password" name="cvv" placeholder="•••" maxlength="4" required />
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Bandeira</label>
+                <select name="bandeira" required>
+                  <option value="">Selecione</option>
+                  <option value="visa">Visa</option>
+                  <option value="mastercard">Mastercard</option>
+                  <option value="elo">Elo</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="form-submit">
+              <span>Pagar com Débito</span>
+            </button>
+          </form>
+
+          {% elif tipo_pagamento_selecionado == 'pix' %}
+          <div class="form-header">
+            <div class="form-header-icon">📱</div>
+            <div class="form-header-text">
+              <h2>Pagamento via PIX</h2>
+              <p>Aprovação instantânea e sem taxas</p>
+            </div>
+          </div>
+
+          <div class="pix-container">
+            <div class="pix-qr-section">
+              <div class="pix-qr-wrapper">
+                <img src="{{ url_for('static', path='uploads/img/pagamento/pix.jpeg') }}" alt="QR Code PIX" />
+              </div>
+              <div class="pix-timer">
+                <div class="pix-timer-label">Válido por</div>
+                <div class="pix-timer-value" id="pix-countdown">10:00</div>
+              </div>
+            </div>
+
+            <div class="pix-info-section">
+              <div class="pix-instructions">
+                <h3>Como pagar</h3>
+                <ol>
+                  <li>Abra o app do seu banco</li>
+                  <li>Escolha pagar com PIX</li>
+                  <li>Escaneie o QR Code ou copie o código</li>
+                  <li>Confirme as informações e finalize</li>
+                </ol>
+              </div>
+
+              <div class="pix-chave-container">
+                <div class="pix-chave-label">Código PIX Copia e Cola</div>
+                <div class="pix-chave-box">
+                  <input type="text" class="pix-chave-input" id="pix-chave-input" value="{{ pix_chave }}" readonly />
+                  <button type="button" class="pix-copy-btn" id="pix-copy-btn">Copiar</button>
+                </div>
+              </div>
+
+              <form id="pix-confirm-form" action="/pagamentos/pix/confirmar" method="post" class="pix-confirm-section">
+                <input type="hidden" name="pedido_id" value="{{ pedido.id }}" />
+                <button type="submit" class="pix-confirm-btn" id="pix-confirm-btn">
+                  <span>Já realizei o pagamento</span>
+                </button>
+              </form>
+
+              <div id="pix-regen" class="pix-expired">
+                <div class="pix-expired-icon">⏱️</div>
+                <p>O código PIX expirou. Gere um novo código para continuar.</p>
+                <a href="/pagamentos/pix?pedido_id={{ pedido.id }}" class="pix-regen-btn">Gerar Novo Código</a>
+              </div>
+
+              <span id="pix-expiracao" data-expiracao="{{ pix_expiracao_ts }}" style="display: none;"></span>
+            </div>
+          </div>
+
+          <script>
+            (function () {
+              const copyBtn = document.getElementById("pix-copy-btn");
+              const input = document.getElementById("pix-chave-input");
+
+              if (copyBtn && input) {
+                copyBtn.addEventListener("click", function () {
+                  input.select();
+                  input.setSelectionRange(0, 99999);
+                  try {
+                    document.execCommand("copy");
+                    copyBtn.textContent = "Copiado!";
+                    setTimeout(() => { copyBtn.textContent = "Copiar"; }, 2000);
+                  } catch (e) {
+                    console.warn("Falha ao copiar", e);
+                  }
+                });
+              }
+
+              const expEl = document.getElementById("pix-expiracao");
+              if (!expEl) return;
+
+              const countdownEl = document.getElementById("pix-countdown");
+              const confirmBtn = document.getElementById("pix-confirm-btn");
+              const regenEl = document.getElementById("pix-regen");
+
+              let expTs = Number(expEl.dataset.expiracao);
+              if (expTs > 0 && expTs < 1e12) expTs = expTs * 1000;
+
+              function updateCountdown() {
+                const now = Date.now();
+                const diff = expTs - now;
+
+                if (diff <= 0) {
+                  countdownEl.textContent = "00:00";
+                  if (confirmBtn) {
+                    confirmBtn.disabled = true;
+                    confirmBtn.classList.add("disabled");
+                  }
+                  if (regenEl) regenEl.classList.add("show");
+                  return;
+                }
+
+                const totalSeconds = Math.floor(diff / 1000);
+                const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+                const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+                countdownEl.textContent = minutes + ":" + seconds;
+                setTimeout(updateCountdown, 1000);
+              }
+
+              updateCountdown();
+            })();
+          </script>
+
+          {% elif tipo_pagamento_selecionado == 'boleto' %}
+          <div class="form-header">
+            <div class="form-header-icon">🧾</div>
+            <div class="form-header-text">
+              <h2>Boleto Bancário</h2>
+              <p>Pagamento confirmado em até 2 dias úteis</p>
+            </div>
+          </div>
+          <form action="/pagamentos/boleto" method="post" class="pagamento-form">
+            <input type="hidden" name="pedido_id" value="{{ pedido.id }}" />
+            <div class="form-row full">
+              <div class="form-group">
+                <label>Código de Barras</label>
+                <input type="text" name="codigo_barras" placeholder="00000.00000 00000.000000 00000.000000 0 00000000000000" required />
+              </div>
+            </div>
+            <button type="submit" class="form-submit">
+              <span>Gerar Boleto</span>
+            </button>
+          </form>
+
+          {% else %}
+          <div class="placeholder-message">
+            <div class="placeholder-icon">🔒</div>
+            <h3>Escolha um método de pagamento</h3>
+            <p>Selecione uma das opções ao lado para continuar com o pagamento seguro do seu pedido.</p>
+          </div>
+          {% endif %}
+
+        </section>
+
+      </div>
+
+      <div class="seguranca-badges">
+        <div class="badge-item">
+          <span class="badge-icon">🔒</span>
+          <span>Ambiente Seguro</span>
+        </div>
+        <div class="badge-item">
+          <span class="badge-icon">🛡️</span>
+          <span>Dados Protegidos</span>
+        </div>
+        <div class="badge-item">
+          <span class="badge-icon">✓</span>
+          <span>Certificado SSL</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Loading genérico nos botões de pagamento -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function attachLoading(formSelector, buttonSelector) {
+        const form = document.querySelector(formSelector);
+        if (!form) return;
+        const button = form.querySelector(buttonSelector);
+        if (!button) return;
+
+        form.addEventListener("submit", function (e) {
+          if (button.disabled) {
+            e.preventDefault();
+            return;
+          }
+          button.disabled = true;
+          button.classList.add("btn-loading");
+        });
+      }
+
+      attachLoading('form[action="/pagamentos/cartao-credito"]', ".form-submit");
+      attachLoading('form[action="/pagamentos/cartao-debito"]', ".form-submit");
+      attachLoading('form[action="/pagamentos/boleto"]', ".form-submit");
+
+      const pixForm = document.getElementById("pix-confirm-form");
+      const pixBtn = document.getElementById("pix-confirm-btn");
+      if (pixForm && pixBtn) {
+        pixForm.addEventListener("submit", function (e) {
+          if (pixBtn.disabled) {
+            e.preventDefault();
+            return;
+          }
+          pixBtn.disabled = true;
+          pixBtn.classList.add("btn-loading");
+        });
+      }
+    });
+  </script>
+</body>
+</html>

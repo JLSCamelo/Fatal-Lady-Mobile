@@ -1,0 +1,124 @@
+/* TROCAS & DEVOLUÇÕES - Fatal Lady */
+
+:root {
+  /* Garante acesso às variáveis mesmo se o arquivo for carregado isolado */
+  --background: #e6e2dc;
+  --main-red: #cb1313;
+  --light-red: #ff1111;
+  --light-gray: #b8ad9d;
+  --dark-gray: #191919;
+}
+
+/* Área geral de conteúdo dessas páginas institucionais */
+main.conteudo {
+  background: var(--background);
+  padding: 3.5rem 1.5rem 4rem;
+}
+
+/* Wrapper do texto de política */
+.conteudo .texto {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 2.5rem 2.75rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  color: var(--dark-gray);
+  line-height: 1.7;
+}
+
+/* Títulos principais e subtítulos alinhados com a home */
+.conteudo .texto h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--dark-gray);
+}
+
+.conteudo .texto h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1.8rem;
+  margin-bottom: 0.75rem;
+  color: var(--dark-gray);
+}
+
+/* Parágrafos */
+.conteudo .texto p {
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  color: #444;
+}
+
+/* Listas */
+.conteudo .texto ul,
+.conteudo .texto ol {
+  margin: 0.5rem 0 1.2rem 1.4rem;
+  padding-left: 0.8rem;
+}
+
+.conteudo .texto ul li,
+.conteudo .texto ol li {
+  font-size: 0.94rem;
+  margin-bottom: 0.45rem;
+  color: #444;
+}
+
+.conteudo .texto ul li::marker {
+  color: var(--main-red);
+}
+
+/* Sublista dentro do passo-a-passo */
+.conteudo .texto ol ul {
+  margin-top: 0.4rem;
+}
+
+/* Links */
+.conteudo .texto a {
+  color: var(--main-red);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(203, 19, 19, 0.25);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.conteudo .texto a:hover {
+  color: var(--light-red);
+  border-color: rgba(255, 17, 17, 0.5);
+}
+
+/* Ênfase */
+.conteudo .texto strong {
+  font-weight: 700;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  main.conteudo {
+    padding: 2.8rem 1rem 3.2rem;
+  }
+
+  .conteudo .texto {
+    padding: 1.8rem 1.5rem;
+    border-radius: 10px;
+  }
+
+  .conteudo .texto h2 {
+    font-size: 1.5rem;
+  }
+
+  .conteudo .texto h3 {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .conteudo .texto {
+    padding: 1.6rem 1.2rem;
+  }
+
+  .conteudo .texto h2 {
+    font-size: 1.35rem;
+  }
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dúvidas Frequentes | Fatal Lady</title>
+
+    <link
+      rel="icon"
+      href="/static/uploads/img/main_icon/icon.png"
+      type="image/png"
+    />
+
+    <!-- CSS base do site -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/home-style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/layout-responsive.css') }}"
+    />
+
+    <!-- CSS específico da página -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/duvidasfreq.css') }}"
+    />
+
+    <!-- Swiper (se for necessário em outras seções desta página) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+    />
+  </head>
+
+  <body data-is-authenticated="{% if usuario %}true{% else %}false{% endif %}">
+    {% include '_header_nav.html' %}
+
+    <main class="conteudo">
+      <section class="faq">
+        <header class="faq-header">
+          <h1>Dúvidas Frequentes</h1>
+          <p>
+            Encontre respostas para as principais dúvidas sobre pedidos,
+            entregas, trocas, devoluções e outros serviços da Fatal Lady.
+          </p>
+        </header>
+
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>Como acompanho meu pedido?</h3>
+            <p>
+              Assim que seu pedido for enviado, você receberá um e-mail com o
+              código de rastreamento e o link da transportadora. Você também
+              pode acompanhar o status em <strong>“Meus Pedidos”</strong> no
+              painel da sua conta.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h3>O produto que quero está esgotado. Ele voltará ao estoque?</h3>
+            <p>
+              Alguns produtos são de edição limitada, mas em muitos casos há
+              reposição. Fique atento ao catálogo e aos avisos em nossas redes
+              sociais para saber quando os itens retornarem.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h3>Posso alterar o endereço de entrega após finalizar o pedido?</h3>
+            <p>
+              Alterações de endereço só podem ser feitas antes da nota fiscal
+              ser emitida e do pedido ser postado. Caso precise ajustar, entre
+              em contato o quanto antes pelo <strong>Fale Conosco</strong>.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h3>Quais são os prazos de entrega?</h3>
+            <p>
+              Os prazos variam de acordo com a sua região e forma de envio
+              selecionada no checkout. O prazo estimado é exibido antes da
+              finalização da compra e também no acompanhamento do pedido.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h3>Como funcionam trocas e devoluções?</h3>
+            <p>
+              Você pode solicitar trocas e devoluções dentro do prazo previsto
+              em nossa política. Consulte a página de
+              <a href="/politicas/trocas/devolucoes">Trocas e Devoluções</a>
+              para mais detalhes sobre condições, prazos e procedimentos.
+            </p>
+          </article>
+
+          <article class="faq-item">
+            <h3>Quais formas de pagamento são aceitas?</h3>
+            <p>
+              Aceitamos cartões de crédito, PIX e outras opções exibidas na
+              etapa de pagamento. Todas as transações são processadas em
+              ambiente seguro.
+            </p>
+          </article>
+        </div>
+
+        <section class="faq-extra">
+          <h2>Não encontrou sua dúvida?</h2>
+          <p>
+            Se a sua pergunta não foi respondida aqui, entre em contato pelo
+            <a href="/faleconosco">Fale Conosco</a> ou consulte nossas
+            <a href="/privacy">Políticas de Privacidade</a>.
+          </p>
+        </section>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="footer-links">
+        <div>
+          <h4>Minha Conta</h4>
+          <a href="/me/dados">Meus Dados</a>
+          <a href="/me/meus-pedidos">Meus Pedidos</a>
+          <a href="/me/painel">Cashback</a>
+          <a href="/login">Login</a>
+        </div>
+
+        <div>
+          <h4>Suporte e Políticas</h4>
+          <a href="/politicas/trocas/devolucoes">Trocas e Devoluções</a>
+          <a href="/faq">Dúvidas Frequentes</a>
+          <a href="/faleconosco">Fale Conosco</a>
+          <a href="/privacy">Política de Privacidade</a>
+        </div>
+        <div>
+          <h4>Formas de Pagamento</h4>
+          <img
+            src="/static/uploads/img/catalogo/footer/payment.png"
+            alt="Formas de Pagamento"
+          />
+        </div>
+      </div>
+      <hr />
+      <p class="copy">
+        Coffe and Code | © 2025 Todos os direitos reservados
+      </p>
+    </footer>
+
+    <!-- JS específico (caso precise) -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+  </body>
+</html>

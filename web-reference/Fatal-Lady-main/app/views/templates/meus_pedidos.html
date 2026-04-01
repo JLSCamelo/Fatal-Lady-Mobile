@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Pedidos | Fatal Lady</title>
+    <link
+      rel="icon"
+      href="/static/uploads/img/main_icon/icon.png"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/home-style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/meus-pedidos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/cart-badge.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='css/layout-responsive.css') }}"
+    />
+  </head>
+  <body data-is-authenticated="{% if usuario %}true{% else %}false{% endif %}">
+    {% include '_header_nav.html' %}
+
+    <main class="pedidos-container">
+      <section class="pedidos-header">
+        <h1>Meus Pedidos</h1>
+        <p>Acompanhe o status de todos os seus pedidos</p>
+      </section>
+
+      <section class="pedidos-content">
+        <div class="pedidos-sidebar">
+          <a href="/me/painel" class="sidebar-link">
+            <img
+              src="/static/uploads/img/home/hover-icons/settings.png"
+              alt="Painel"
+            />
+            <span>Painel Geral</span>
+          </a>
+          <a href="/me/dados" class="sidebar-link">
+            <img
+              src="/static/uploads/img/home/hover-icons/user (1).png"
+              alt="Meus Dados"
+            />
+            <span>Meus Dados</span>
+          </a>
+          <a href="/me/meus-pedidos" class="sidebar-link active">
+            <img
+              src="/static/uploads/img/home/hover-icons/document.png"
+              alt="Pedidos"
+            />
+            <span>Meus Pedidos</span>
+          </a>
+          <a href="/me/enderecos" class="sidebar-link">
+            <img
+              src="/static/uploads/img/home/hover-icons/truck-box.png"
+              alt="Endereços"
+            />
+            <span>Endereços</span>
+          </a>
+          <a href="/logout" class="sidebar-link logout">
+            <span>Sair</span>
+          </a>
+        </div>
+
+        <div class="pedidos-main">
+          {% if pedidos %} {% for p in pedidos %}
+          <div class="pedido-card">
+            <div class="pedido-header">
+              <div class="pedido-info">
+                <h3>Pedido #{{ p.id }}</h3>
+                <span class="pedido-data"
+                  >{{ p.data.strftime('%d/%m/%Y') if p.data else 'Data não
+                  disponível' }}</span
+                >
+              </div>
+              <div class="pedido-status">
+                <span class="status-badge status-{{ p.status or 'pendente' }}">
+                  {{ p.status.upper() if p.status else 'PENDENTE' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="pedido-body">
+              <div class="pedido-items">
+                {% for item in p.itens %}
+                <div class="pedido-item">
+                  <div class="item-image">
+                    <img
+                      src="{{ item.produto.caminhoimagem or '/static/uploads/img/catalogo/products/default.png' }}"
+                      alt="{{ item.produto.nome }}"
+                    />
+                  </div>
+                  <div class="item-details">
+                    <h4>{{ item.nome_produto }}</h4>
+                    <p class="item-quantity">
+                      Quantidade: {{ item.quantidade }}
+                    </p>
+                    <p class="item-price">
+                      R$ {{ ('%.2f'|format(item.preco_unitario)).replace('.',
+                      ',') }}
+                    </p>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="pedido-footer">
+              <div class="pedido-total">
+                <span>Total do Pedido:</span>
+                <strong
+                  >R$ {{ ('%.2f'|format(p.valortotal)).replace('.', ',')
+                  }}</strong
+                >
+              </div>
+              <div class="pedido-actions">
+                <button
+                  class="btn-details"
+                  onclick="toggleDetails('{{ p.id }}')"
+                >
+                  Ver Detalhes
+                </button>
+                <button class="btn-track">Rastrear</button>
+              </div>
+            </div>
+
+            <div class="pedido-details hidden" id="details-{{ p.id }}">
+              <div class="details-section">
+                <h4>Informações de Entrega</h4>
+                <p>{{ p.endereco_entrega or 'Endereço não disponível' }}</p>
+              </div>
+              <div class="details-section">
+                <h4>Forma de Pagamento</h4>
+                <p>{{ p.forma_pagamento or 'Não especificado' }}</p>
+              </div>
+              <div class="details-section">
+                <h4>Status do Pedido</h4>
+                <div class="timeline">
+                  <div class="timeline-item active">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                      <h5>Pedido Confirmado</h5>
+                      <p>
+                        {{ p.data_pedido.strftime('%d/%m/%Y às %H:%M') if
+                        p.data_pedido else '-' }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                      <h5>Em Separação</h5>
+                      <p>Aguardando</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                      <h5>Em Transporte</h5>
+                      <p>Aguardando</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                      <h5>Entregue</h5>
+                      <p>Aguardando</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="empty-state">
+            <img
+              src="/static/uploads/img/home/hover-icons/shopping-cart-add.png"
+              alt="Sem pedidos"
+            />
+            <h2>Você ainda não fez nenhum pedido</h2>
+            <p>Explore nosso catálogo e encontre produtos incríveis!</p>
+            <a href="/produtos" class="btn-shop">Ir para a Loja</a>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="footer-links">
+        <div>
+          <h4>Minha Conta</h4>
+          <a href="/me/dados">Meus Dados</a>
+          <a href="/me/meus-pedidos">Meus Pedidos</a>
+          <a href="/me/painel">Cashback</a>
+          <a href="/login">Login</a>
+        </div>
+
+        <div>
+          <h4>Suporte e Políticas</h4>
+          <a href="/politicas/trocas/devolucoes">Trocas e Devoluções</a>
+          <a href="/faq">Dúvidas Frequentes</a>
+          <a href="/faleconosco">Fale Conosco</a>
+          <a href="/privacy">Política de Privacidade</a>
+        </div>
+        <div>
+          <h4>Formas de Pagamento</h4>
+          <img
+            src="/static/uploads/img/catalogo/footer/payment.png"
+            alt="Formas de Pagamento"
+          />
+        </div>
+      </div>
+      <hr />
+      <p class="copy">Coffe and Code | © 2025 Todos os direitos reservados</p>
+    </footer> 
+
+
+    <script src="/static/js/meus-pedidos.js"></script>
+    <script src="/static/js/promo-rotator.js" defer></script>
+    <script src="/static/js/cart-badge.js" defer></script>
+  </body>
+</html>
