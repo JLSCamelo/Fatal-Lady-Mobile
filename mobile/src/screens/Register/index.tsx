@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, useWindowDimensions, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { AuthBenefitsCard } from "../../components/auth/AuthBenefitsCard";
@@ -31,6 +31,8 @@ const estados = [
 
 export function RegisterScreen({ navigation }: Props) {
   const { register } = useAppStore();
+  const { width } = useWindowDimensions();
+  const compact = width < 420;
   const [form, setForm] = useState<RegisterFormState>({
     nome: "",
     email: "",
@@ -64,6 +66,11 @@ export function RegisterScreen({ navigation }: Props) {
       : strength < 4
         ? "Média"
         : "Forte";
+
+  function updateField<K extends keyof RegisterFormState>(key: K, value: RegisterFormState[K]) {
+    setForm((current) => ({ ...current, [key]: value }));
+    setErrors((current) => ({ ...current, [key]: undefined, global: undefined }));
+  }
 
   async function handleCepBlur() {
     const result = await lookupCep(form.cep);
@@ -100,7 +107,7 @@ export function RegisterScreen({ navigation }: Props) {
 
   return (
     <PageShell>
-      <View style={styles.container}>
+      <View style={[styles.container, compact && styles.containerCompact]}>
         <AuthBenefitsCard
           title="Crie sua conta"
           subtitle="Cadastre-se agora e aproveite benefícios exclusivos, ofertas especiais e uma experiência de compra personalizada."
@@ -108,9 +115,9 @@ export function RegisterScreen({ navigation }: Props) {
           benefitsTitle="Vantagens de ter uma conta"
         />
 
-        <View style={styles.card}>
+        <View style={[styles.card, compact && styles.cardCompact]}>
           <View style={styles.header}>
-            <Text style={styles.title}>Cadastro</Text>
+            <Text style={[styles.title, compact && styles.titleCompact]}>Cadastro</Text>
             <Text style={styles.subtitle}>Preencha seus dados para começar</Text>
           </View>
 
@@ -120,14 +127,14 @@ export function RegisterScreen({ navigation }: Props) {
               label="Nome Completo"
               placeholder="Seu Nome"
               value={form.nome}
-              onChangeText={(value) => setForm((current) => ({ ...current, nome: value }))}
+              onChangeText={(value) => updateField("nome", value)}
               error={errors.nome}
             />
             <TextField
               label="Email"
               placeholder="seu@exemplo.com"
               value={form.email}
-              onChangeText={(value) => setForm((current) => ({ ...current, email: value }))}
+              onChangeText={(value) => updateField("email", value)}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -137,7 +144,7 @@ export function RegisterScreen({ navigation }: Props) {
               label="Telefone"
               placeholder="(11) 12345-6789"
               value={form.telefone}
-              onChangeText={(value) => setForm((current) => ({ ...current, telefone: maskPhone(value) }))}
+              onChangeText={(value) => updateField("telefone", maskPhone(value))}
               keyboardType="phone-pad"
               error={errors.telefone}
             />
@@ -145,7 +152,7 @@ export function RegisterScreen({ navigation }: Props) {
               label="CPF"
               placeholder="123.456.789-10"
               value={form.cpf}
-              onChangeText={(value) => setForm((current) => ({ ...current, cpf: maskCpf(value) }))}
+              onChangeText={(value) => updateField("cpf", maskCpf(value))}
               keyboardType="number-pad"
               error={errors.cpf}
             />
@@ -153,7 +160,8 @@ export function RegisterScreen({ navigation }: Props) {
               label="Data de Nascimento"
               placeholder="AAAA-MM-DD"
               value={form.data_nascimento}
-              onChangeText={(value) => setForm((current) => ({ ...current, data_nascimento: value }))}
+              onChangeText={(value) => updateField("data_nascimento", value)}
+              autoCapitalize="none"
               error={errors.data_nascimento}
             />
             <OptionPickerField
@@ -161,7 +169,7 @@ export function RegisterScreen({ navigation }: Props) {
               value={form.genero}
               placeholder="Selecione seu gênero"
               options={generoOptions}
-              onSelect={(value) => setForm((current) => ({ ...current, genero: value }))}
+              onSelect={(value) => updateField("genero", value)}
               error={errors.genero}
             />
           </View>
@@ -172,7 +180,7 @@ export function RegisterScreen({ navigation }: Props) {
               label="CEP"
               placeholder="12345-678"
               value={form.cep}
-              onChangeText={(value) => setForm((current) => ({ ...current, cep: maskCep(value) }))}
+              onChangeText={(value) => updateField("cep", maskCep(value))}
               onBlur={handleCepBlur}
               hint="Informe seu CEP para busca automática"
               keyboardType="number-pad"
@@ -182,34 +190,34 @@ export function RegisterScreen({ navigation }: Props) {
               label="Rua"
               placeholder="Rua das Flores"
               value={form.rua}
-              onChangeText={(value) => setForm((current) => ({ ...current, rua: value }))}
+              onChangeText={(value) => updateField("rua", value)}
               error={errors.rua}
             />
             <TextField
               label="Número"
               placeholder="123"
               value={form.numero}
-              onChangeText={(value) => setForm((current) => ({ ...current, numero: value }))}
+              onChangeText={(value) => updateField("numero", value)}
               error={errors.numero}
             />
             <TextField
               label="Complemento"
               placeholder="Apto 45 (opcional)"
               value={form.complemento}
-              onChangeText={(value) => setForm((current) => ({ ...current, complemento: value }))}
+              onChangeText={(value) => updateField("complemento", value)}
             />
             <TextField
               label="Bairro"
               placeholder="Centro"
               value={form.bairro}
-              onChangeText={(value) => setForm((current) => ({ ...current, bairro: value }))}
+              onChangeText={(value) => updateField("bairro", value)}
               error={errors.bairro}
             />
             <TextField
               label="Cidade"
               placeholder="São Paulo"
               value={form.cidade}
-              onChangeText={(value) => setForm((current) => ({ ...current, cidade: value }))}
+              onChangeText={(value) => updateField("cidade", value)}
               error={errors.cidade}
             />
             <OptionPickerField
@@ -217,7 +225,7 @@ export function RegisterScreen({ navigation }: Props) {
               value={form.estado}
               placeholder="Selecione o estado"
               options={estados}
-              onSelect={(value) => setForm((current) => ({ ...current, estado: value }))}
+              onSelect={(value) => updateField("estado", value)}
               error={errors.estado}
             />
           </View>
@@ -228,7 +236,7 @@ export function RegisterScreen({ navigation }: Props) {
               label="Senha"
               placeholder="Mínimo 8 caracteres"
               value={form.senha}
-              onChangeText={(value) => setForm((current) => ({ ...current, senha: value }))}
+              onChangeText={(value) => updateField("senha", value)}
               secureTextEntry={!showPassword}
               rightActionLabel={showPassword ? "Ocultar" : "Mostrar"}
               onRightActionPress={() => setShowPassword((current) => !current)}
@@ -245,7 +253,7 @@ export function RegisterScreen({ navigation }: Props) {
               label="Confirmar Senha"
               placeholder="Digite a senha novamente"
               value={form.confirmarSenha}
-              onChangeText={(value) => setForm((current) => ({ ...current, confirmarSenha: value }))}
+              onChangeText={(value) => updateField("confirmarSenha", value)}
               secureTextEntry={!showPassword}
               error={errors.confirmarSenha}
             />
@@ -253,7 +261,10 @@ export function RegisterScreen({ navigation }: Props) {
 
           <Pressable
             style={styles.checkboxRow}
-            onPress={() => setForm((current) => ({ ...current, terms: !current.terms }))}
+            onPress={() => {
+              setForm((current) => ({ ...current, terms: !current.terms }));
+              setErrors((current) => ({ ...current, global: undefined }));
+            }}
           >
             <View style={[styles.checkbox, form.terms && styles.checkboxActive]}>
               {form.terms ? <Text style={styles.checkboxText}>✓</Text> : null}
@@ -266,7 +277,10 @@ export function RegisterScreen({ navigation }: Props) {
 
           <Pressable
             style={styles.checkboxRow}
-            onPress={() => setForm((current) => ({ ...current, newsletter: !current.newsletter }))}
+            onPress={() => {
+              setForm((current) => ({ ...current, newsletter: !current.newsletter }));
+              setErrors((current) => ({ ...current, global: undefined }));
+            }}
           >
             <View style={[styles.checkbox, form.newsletter && styles.checkboxActive]}>
               {form.newsletter ? <Text style={styles.checkboxText}>✓</Text> : null}

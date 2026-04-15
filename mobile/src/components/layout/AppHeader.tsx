@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -19,6 +20,8 @@ export function AppHeader() {
   const navigation = useNavigation<any>();
   const { cartCount, currentUser, logout } = useAppStore();
   const [menuVisible, setMenuVisible] = useState(false);
+  const { width } = useWindowDimensions();
+  const compact = width < 420;
   const promo = useMemo(
     () => promoMessages[new Date().getSeconds() % promoMessages.length],
     []
@@ -52,37 +55,39 @@ export function AppHeader() {
 
   return (
     <>
-      <View style={styles.topBar}>
-        <View style={styles.languageRow}>
-          <Image source={iconAssets.languages} style={styles.smallIcon} />
-          <Text style={styles.topText}>BR</Text>
+      <View style={[styles.topBar, compact && styles.topBarCompact]}>
+        <View style={[styles.topMetaRow, compact && styles.topMetaRowCompact]}>
+          <View style={styles.languageRow}>
+            <Image source={iconAssets.languages} style={styles.smallIcon} />
+            <Text style={styles.topText}>BR</Text>
+          </View>
+          <View style={[styles.topActions, compact && styles.topActionsCompact]}>
+            <Pressable onPress={() => Alert.alert("Ajuda", "A central de ajuda ainda não está disponível no app mobile.")}>
+              <Text style={styles.topLink}>Ajuda</Text>
+            </Pressable>
+            {currentUser ? (
+              <>
+                <Text style={styles.topLink}>Olá, {currentUser.nome.split(" ")[0]}</Text>
+                <Pressable onPress={logout}>
+                  <Text style={styles.topLink}>Sair</Text>
+                </Pressable>
+              </>
+            ) : (
+              <>
+                <Pressable onPress={() => openStack("Login")}>
+                  <Text style={styles.topLink}>Entrar</Text>
+                </Pressable>
+                <Pressable onPress={() => openStack("Register")}>
+                  <Text style={styles.topLink}>Criar conta</Text>
+                </Pressable>
+              </>
+            )}
+          </View>
         </View>
-        <Text style={styles.promoText}>{promo}</Text>
-        <View style={styles.topActions}>
-          <Pressable onPress={() => Alert.alert("Ajuda", "A central de ajuda ainda não está disponível no app mobile.")}>
-            <Text style={styles.topLink}>Ajuda</Text>
-          </Pressable>
-          {currentUser ? (
-            <>
-              <Text style={styles.topLink}>Olá, {currentUser.nome.split(" ")[0]}</Text>
-              <Pressable onPress={logout}>
-                <Text style={styles.topLink}>Sair</Text>
-              </Pressable>
-            </>
-          ) : (
-            <>
-              <Pressable onPress={() => openStack("Login")}>
-                <Text style={styles.topLink}>Entrar</Text>
-              </Pressable>
-              <Pressable onPress={() => openStack("Register")}>
-                <Text style={styles.topLink}>Criar conta</Text>
-              </Pressable>
-            </>
-          )}
-        </View>
+        <Text style={[styles.promoText, compact && styles.promoTextCompact]}>{promo}</Text>
       </View>
 
-      <View style={styles.navBar}>
+      <View style={[styles.navBar, compact && styles.navBarCompact]}>
         <View style={styles.navLeft}>
           <Pressable onPress={() => openTab("Home")}>
             <Text style={styles.navText}>Início</Text>
@@ -99,7 +104,7 @@ export function AppHeader() {
         </View>
 
         <Pressable style={styles.logoWrap} onPress={() => openTab("Home")}>
-          <Image source={iconAssets.logo} style={styles.logo} resizeMode="contain" />
+          <Image source={iconAssets.logo} style={[styles.logo, compact && styles.logoCompact]} resizeMode="contain" />
         </Pressable>
 
         <View style={styles.navRight}>
@@ -185,9 +190,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
     paddingBottom: spacing.md,
+    gap: spacing.xs,
+  },
+  topBarCompact: {
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+  },
+  topMetaRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: spacing.sm,
+  },
+  topMetaRowCompact: {
+    alignItems: "flex-start",
+    flexWrap: "wrap",
   },
   languageRow: {
     flexDirection: "row",
@@ -204,17 +221,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   promoText: {
-    flex: 1,
-    marginHorizontal: spacing.md,
     textAlign: "center",
     color: colors.text,
     fontFamily: typography.body,
     fontSize: 12,
   },
+  promoTextCompact: {
+    fontSize: 11,
+    lineHeight: 16,
+  },
   topActions: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
+  },
+  topActionsCompact: {
+    gap: 6,
+    maxWidth: "82%",
   },
   topLink: {
     color: colors.text,
@@ -228,6 +253,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  navBarCompact: {
+    paddingHorizontal: spacing.md,
   },
   navLeft: {
     flexDirection: "row",
@@ -247,6 +275,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 132,
     height: 28,
+  },
+  logoCompact: {
+    width: 112,
+    height: 24,
   },
   navRight: {
     flexDirection: "row",

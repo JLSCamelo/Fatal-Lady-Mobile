@@ -23,6 +23,7 @@ export function PageShell({
         style={styles.scroll}
         contentContainerStyle={[styles.content, contentContainerStyle]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <AppHeader />
         <View style={styles.body}>{children}</View>
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: colors.background,
+    flexGrow: 1,
   },
   body: {
     gap: 24,

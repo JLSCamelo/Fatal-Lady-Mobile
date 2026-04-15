@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -28,6 +29,8 @@ export function OptionPickerField({
   onSelect,
 }: OptionPickerFieldProps) {
   const [visible, setVisible] = useState(false);
+  const { width } = useWindowDimensions();
+  const compact = width < 420;
 
   return (
     <>
@@ -35,12 +38,12 @@ export function OptionPickerField({
         <Text style={styles.label}>{label}</Text>
         <Pressable
           onPress={() => setVisible(true)}
-          style={[styles.field, error ? styles.fieldError : undefined]}
+          style={[styles.field, compact && styles.fieldCompact, error ? styles.fieldError : undefined]}
         >
-          <Text style={[styles.value, !value ? styles.placeholder : undefined]}>
+          <Text numberOfLines={1} style={[styles.value, !value ? styles.placeholder : undefined]}>
             {value || placeholder}
           </Text>
-          <Text style={styles.chevron}>v</Text>
+          <Text style={styles.chevron}>⌄</Text>
         </Pressable>
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
@@ -90,27 +93,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  fieldCompact: {
+    paddingHorizontal: spacing.md,
+  },
   fieldError: {
     borderColor: colors.danger,
     backgroundColor: "#FFF1F2",
   },
   value: {
+    flex: 1,
     color: colors.text,
     fontFamily: typography.body,
     fontSize: 15,
+    paddingRight: spacing.md,
   },
   placeholder: {
     color: colors.textSoft,
   },
   chevron: {
     color: colors.textMuted,
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: typography.body,
+    marginLeft: spacing.md,
   },
   error: {
     color: colors.danger,
     fontFamily: typography.body,
     fontSize: 12,
+    lineHeight: 18,
   },
   overlay: {
     flex: 1,

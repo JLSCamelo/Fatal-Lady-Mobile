@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Alert, Pressable, StyleSheet, Switch, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { PageShell } from "../../components/layout/PageShell";
@@ -17,6 +17,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 export function LoginScreen({ navigation, route }: Props) {
   const { login } = useAppStore();
+  const { width } = useWindowDimensions();
+  const compact = width < 420;
   const [form, setForm] = useState<LoginFormState>({
     email: route.params?.prefillEmail ?? "",
     senha: "",
@@ -55,7 +57,7 @@ export function LoginScreen({ navigation, route }: Props) {
     setSubmitting(false);
 
     if (!result.ok) {
-      setErrors({ senha: result.message, global: result.message });
+      setErrors({ global: result.message });
       return;
     }
 
@@ -69,7 +71,7 @@ export function LoginScreen({ navigation, route }: Props) {
 
   return (
     <PageShell>
-      <View style={styles.container}>
+      <View style={[styles.container, compact && styles.containerCompact]}>
         <AuthBenefitsCard
           title="Bem-vindo de volta"
           subtitle="Acesse sua conta para continuar com suas compras, ver pedidos e aproveitar ofertas exclusivas."
@@ -77,8 +79,8 @@ export function LoginScreen({ navigation, route }: Props) {
           benefitsTitle="Benefícios"
         />
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Entrar na sua conta</Text>
+        <View style={[styles.card, compact && styles.cardCompact]}>
+          <Text style={[styles.cardTitle, compact && styles.cardTitleCompact]}>Entrar na sua conta</Text>
 
           {feedbackMessage ? <Text style={styles.successBanner}>{feedbackMessage}</Text> : null}
 
@@ -111,16 +113,16 @@ export function LoginScreen({ navigation, route }: Props) {
               error={errors.senha}
             />
 
-            <View style={styles.actionsRow}>
-              <View style={styles.rememberRow}>
-                <Switch
-                  value={form.remember}
-                  onValueChange={(value) => setForm((current) => ({ ...current, remember: value }))}
-                  trackColor={{ false: "#D7D0C6", true: colors.primary }}
-                  thumbColor={colors.surface}
-                />
+            <View style={[styles.actionsRow, compact && styles.actionsRowCompact]}>
+              <Pressable
+                style={styles.rememberRow}
+                onPress={() => setForm((current) => ({ ...current, remember: !current.remember }))}
+              >
+                <View style={[styles.rememberToggle, form.remember && styles.rememberToggleActive]}>
+                  <View style={[styles.rememberKnob, form.remember && styles.rememberKnobActive]} />
+                </View>
                 <Text style={styles.rememberText}>Lembrar-me</Text>
-              </View>
+              </Pressable>
 
               <Pressable
                 onPress={() =>
@@ -141,9 +143,9 @@ export function LoginScreen({ navigation, route }: Props) {
               <View style={styles.divider} />
             </View>
 
-            <View style={styles.socialRow}>
+            <View style={[styles.socialRow, compact && styles.socialRowCompact]}>
               <Pressable
-                style={styles.socialButton}
+                style={[styles.socialButton, compact && styles.socialButtonCompact]}
                 onPress={() =>
                   Alert.alert("Integração pendente", "Login com Google ainda não está disponível no app mobile.")
                 }
@@ -151,7 +153,7 @@ export function LoginScreen({ navigation, route }: Props) {
                 <Text style={styles.socialText}>Google</Text>
               </Pressable>
               <Pressable
-                style={styles.socialButton}
+                style={[styles.socialButton, compact && styles.socialButtonCompact]}
                 onPress={() =>
                   Alert.alert("Integração pendente", "Login com Facebook ainda não está disponível no app mobile.")
                 }
@@ -177,6 +179,13 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.xl,
     gap: spacing.xl,
+    width: "100%",
+    maxWidth: 960,
+    alignSelf: "center",
+  },
+  containerCompact: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
   card: {
     backgroundColor: colors.surface,
@@ -186,11 +195,19 @@ const styles = StyleSheet.create({
     gap: spacing.xl,
     ...shadows.card,
   },
+  cardCompact: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    gap: spacing.lg,
+  },
   cardTitle: {
     color: colors.text,
     fontFamily: typography.titleSemi,
     fontSize: 28,
     textAlign: "center",
+  },
+  cardTitleCompact: {
+    fontSize: 24,
   },
   successBanner: {
     color: colors.successText,
@@ -209,11 +226,35 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: spacing.md,
+    flexWrap: "wrap",
+  },
+  actionsRowCompact: {
+    alignItems: "flex-start",
   },
   rememberRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+  },
+  rememberToggle: {
+    width: 34,
+    height: 18,
+    borderRadius: radius.pill,
+    backgroundColor: "#D7D0C6",
+    justifyContent: "center",
+    paddingHorizontal: 2,
+  },
+  rememberToggleActive: {
+    backgroundColor: colors.primary,
+  },
+  rememberKnob: {
+    width: 14,
+    height: 14,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+  },
+  rememberKnobActive: {
+    alignSelf: "flex-end",
   },
   rememberText: {
     color: colors.textMuted,
@@ -229,6 +270,7 @@ const styles = StyleSheet.create({
     color: colors.danger,
     fontFamily: typography.body,
     fontSize: 13,
+    lineHeight: 18,
   },
   dividerRow: {
     flexDirection: "row",
@@ -249,6 +291,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.md,
   },
+  socialRowCompact: {
+    flexDirection: "column",
+  },
   socialButton: {
     flex: 1,
     minHeight: 48,
@@ -257,6 +302,9 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
+  },
+  socialButtonCompact: {
+    width: "100%",
   },
   socialText: {
     color: colors.text,

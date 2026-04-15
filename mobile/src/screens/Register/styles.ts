@@ -6,6 +6,13 @@ export const styles = StyleSheet.create({
   container: {
     padding: spacing.xl,
     gap: spacing.xl,
+    width: "100%",
+    maxWidth: 960,
+    alignSelf: "center",
+  },
+  containerCompact: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
   card: {
     backgroundColor: colors.surface,
@@ -14,6 +21,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: spacing.xl,
     ...shadows.card,
+  },
+  cardCompact: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    gap: spacing.lg,
   },
   header: {
     gap: spacing.sm,
@@ -24,6 +36,9 @@ export const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: "center",
   },
+  titleCompact: {
+    fontSize: 24,
+  },
   subtitle: {
     color: colors.textMuted,
     fontFamily: typography.body,
@@ -31,7 +46,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   section: {
-    gap: spacing.lg,
+    gap: spacing.md,
   },
   sectionTitle: {
     color: colors.primary,
@@ -76,6 +91,7 @@ export const styles = StyleSheet.create({
     color: colors.danger,
     fontFamily: typography.body,
     fontSize: 13,
+    lineHeight: 18,
   },
   passwordMeter: {
     gap: spacing.sm,
@@ -99,5 +115,6 @@ export const styles = StyleSheet.create({
     color: colors.textMuted,
     fontFamily: typography.body,
     fontSize: 14,
+    textAlign: "center",
   },
 });
