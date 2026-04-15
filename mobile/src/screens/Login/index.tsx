@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-} from "react-native";
+import React, { useMemo, useState } from "react";
+import { Alert, Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { PageShell } from "../../components/layout/PageShell";
@@ -24,7 +18,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 export function LoginScreen({ navigation, route }: Props) {
   const { login } = useAppStore();
   const [form, setForm] = useState<LoginFormState>({
-    email: "",
+    email: route.params?.prefillEmail ?? "",
     senha: "",
     remember: true,
   });
@@ -32,15 +26,24 @@ export function LoginScreen({ navigation, route }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const feedbackMessage = useMemo(() => {
+    if (route.params?.feedback === "registered") {
+      return "Conta criada com sucesso. Faça login para continuar.";
+    }
+
+    return null;
+  }, [route.params?.feedback]);
+
   async function handleSubmit() {
     const nextErrors: LoginErrors = {};
+    const sanitizedEmail = form.email.trim().toLowerCase();
 
-    if (!validateEmail(form.email)) {
+    if (!validateEmail(sanitizedEmail)) {
       nextErrors.email = "Informe um e-mail válido.";
     }
 
     if (!form.senha.trim()) {
-      nextErrors.senha = "Usuário ou senha incorretos.";
+      nextErrors.senha = "Digite sua senha.";
     }
 
     setErrors(nextErrors);
@@ -48,7 +51,7 @@ export function LoginScreen({ navigation, route }: Props) {
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    const result = await login({ email: form.email, senha: form.senha });
+    const result = await login({ email: sanitizedEmail, senha: form.senha });
     setSubmitting(false);
 
     if (!result.ok) {
@@ -56,7 +59,12 @@ export function LoginScreen({ navigation, route }: Props) {
       return;
     }
 
-    navigation.replace("MainTabs");
+    if (route.params?.redirectTo) {
+      navigation.replace("MainTabs", { screen: route.params.redirectTo });
+      return;
+    }
+
+    navigation.replace("MainTabs", { screen: "Home" });
   }
 
   return (
@@ -72,6 +80,8 @@ export function LoginScreen({ navigation, route }: Props) {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Entrar na sua conta</Text>
 
+          {feedbackMessage ? <Text style={styles.successBanner}>{feedbackMessage}</Text> : null}
+
           <View style={styles.form}>
             <TextField
               label="Email"
@@ -81,6 +91,7 @@ export function LoginScreen({ navigation, route }: Props) {
                 setErrors((current) => ({ ...current, email: undefined, global: undefined }));
               }}
               autoCapitalize="none"
+              autoCorrect={false}
               keyboardType="email-address"
               placeholder="seu@exemplo.com"
               error={errors.email}
@@ -111,7 +122,11 @@ export function LoginScreen({ navigation, route }: Props) {
                 <Text style={styles.rememberText}>Lembrar-me</Text>
               </View>
 
-              <Pressable>
+              <Pressable
+                onPress={() =>
+                  Alert.alert("Em breve", "Recuperação de senha ainda não está disponível no app.")
+                }
+              >
                 <Text style={styles.link}>Esqueci minha senha</Text>
               </Pressable>
             </View>
@@ -127,10 +142,20 @@ export function LoginScreen({ navigation, route }: Props) {
             </View>
 
             <View style={styles.socialRow}>
-              <Pressable style={styles.socialButton}>
+              <Pressable
+                style={styles.socialButton}
+                onPress={() =>
+                  Alert.alert("Integração pendente", "Login com Google ainda não está disponível no app mobile.")
+                }
+              >
                 <Text style={styles.socialText}>Google</Text>
               </Pressable>
-              <Pressable style={styles.socialButton}>
+              <Pressable
+                style={styles.socialButton}
+                onPress={() =>
+                  Alert.alert("Integração pendente", "Login com Facebook ainda não está disponível no app mobile.")
+                }
+              >
                 <Text style={styles.socialText}>Facebook</Text>
               </Pressable>
             </View>
@@ -141,12 +166,6 @@ export function LoginScreen({ navigation, route }: Props) {
                 Crie uma agora
               </Text>
             </Text>
-
-            {route.params?.redirectTo ? (
-              <Text style={styles.hint}>
-                Após o login, você volta para a área de {route.params.redirectTo.toLowerCase()}.
-              </Text>
-            ) : null}
           </View>
         </View>
       </View>
@@ -172,6 +191,15 @@ const styles = StyleSheet.create({
     fontFamily: typography.titleSemi,
     fontSize: 28,
     textAlign: "center",
+  },
+  successBanner: {
+    color: colors.successText,
+    backgroundColor: colors.successBg,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    fontFamily: typography.body,
+    fontSize: 13,
   },
   form: {
     gap: spacing.lg,
@@ -239,11 +267,6 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontFamily: typography.body,
     fontSize: 14,
-  },
-  hint: {
-    color: colors.textSoft,
-    fontFamily: typography.body,
-    fontSize: 12,
-    lineHeight: 18,
+    textAlign: "center",
   },
 });

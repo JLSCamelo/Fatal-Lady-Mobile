@@ -42,10 +42,16 @@ export const styles = StyleSheet.create({
   },
   chipText: {
     color: colors.text,
+  },
+  chipTextActive: {
+    color: colors.surface,
+  },
+  chipLabel: {
+    color: colors.text,
     fontFamily: typography.body,
     fontSize: 13,
   },
-  chipTextActive: {
+  chipLabelActive: {
     color: colors.surface,
   },
   rangeLabelRow: {

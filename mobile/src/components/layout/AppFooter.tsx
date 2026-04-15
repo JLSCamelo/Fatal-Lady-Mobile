@@ -22,8 +22,11 @@ export function AppFooter() {
           <Text style={styles.link}>Fale Conosco</Text>
           <Text style={styles.link}>Política de Privacidade</Text>
         </View>
+        <View style={styles.column}>
+          <Text style={styles.title}>Formas de Pagamento</Text>
+          <Image source={imageAssets.paymentMethods} style={styles.payment} resizeMode="contain" />
+        </View>
       </View>
-      <Image source={imageAssets.paymentMethods} style={styles.payment} resizeMode="contain" />
       <Text style={styles.copy}>Coffe and Code | © 2025 Todos os direitos reservados</Text>
     </View>
   );
@@ -37,6 +40,7 @@ const styles = StyleSheet.create({
   },
   columns: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.xl,
   },
   column: {
@@ -47,6 +51,7 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontFamily: typography.titleSemi,
     fontSize: 16,
+    textTransform: "uppercase",
   },
   link: {
     color: colors.textMuted,
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
   },
   payment: {
     width: "100%",
-    height: 28,
+    height: 40,
   },
   copy: {
     color: colors.textSoft,

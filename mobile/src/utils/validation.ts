@@ -5,6 +5,20 @@ export function validateEmail(email: string) {
   return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.trim());
 }
 
+export function validateBirthDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day &&
+    year >= 1900
+  );
+}
+
 export function calculatePasswordStrength(password: string) {
   let strength = 0;
   if (password.length >= 8) strength += 1;
@@ -42,8 +56,16 @@ export function validateRegister(payload: RegisterPayload) {
   if (!validateEmail(payload.email)) errors.email = "Informe um e-mail válido.";
   if (onlyDigits(payload.telefone).length < 10) errors.telefone = "Informe um telefone válido com DDD.";
   if (!isValidCpf(payload.cpf)) errors.cpf = "CPF inválido.";
-  if (!payload.data_nascimento) errors.data_nascimento = "Informe sua data de nascimento.";
+  if (!validateBirthDate(payload.data_nascimento)) {
+    errors.data_nascimento = "Use o formato AAAA-MM-DD com uma data válida.";
+  }
   if (!payload.genero) errors.genero = "Selecione uma opção de gênero.";
+  if (onlyDigits(payload.cep).length !== 8) errors.cep = "Informe um CEP válido.";
+  if (!payload.rua.trim()) errors.rua = "Informe o nome da rua.";
+  if (!payload.numero.trim()) errors.numero = "Informe o número.";
+  if (!payload.bairro.trim()) errors.bairro = "Informe o bairro.";
+  if (!payload.cidade.trim()) errors.cidade = "Informe a cidade.";
+  if (!payload.estado.trim()) errors.estado = "Selecione o estado.";
   if (onlyDigits(payload.cep).length !== 8) errors.cep = "Informe um CEP válido.";
   if (!payload.rua.trim()) errors.rua = "Informe o nome da rua.";
   if (!payload.numero.trim()) errors.numero = "Informe o número.";
@@ -53,9 +75,13 @@ export function validateRegister(payload: RegisterPayload) {
 
   const hasNumber = /\d/;
   const hasSpecialChar = /[^a-zA-Z0-9]/;
+  const hasUppercase = /[A-Z]/;
 
   if (!payload.senha) errors.senha = "Informe uma senha.";
   else if (payload.senha.length < 8) errors.senha = "A senha deve ter no mínimo 8 caracteres.";
+  else if (!hasUppercase.test(payload.senha)) {
+    errors.senha = "A senha deve conter ao menos uma letra maiúscula.";
+  }
   else if (!hasNumber.test(payload.senha)) errors.senha = "A senha deve conter ao menos um número.";
   else if (!hasSpecialChar.test(payload.senha)) errors.senha = "A senha deve conter ao menos um caractere especial.";
 

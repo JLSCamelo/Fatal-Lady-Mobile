@@ -42,7 +42,13 @@ export function ProductCard({
           </View>
         ) : null}
         {onFavoritePress && !isFeatured ? (
-          <Pressable style={[styles.favorite, isFavorite && styles.favoriteActive]} onPress={onFavoritePress}>
+          <Pressable
+            style={[styles.favorite, isFavorite && styles.favoriteActive]}
+            onPress={(event) => {
+              event.stopPropagation();
+              onFavoritePress();
+            }}
+          >
             <Text style={[styles.favoriteText, isFavorite && styles.favoriteTextActive]}>♥</Text>
           </Pressable>
         ) : null}

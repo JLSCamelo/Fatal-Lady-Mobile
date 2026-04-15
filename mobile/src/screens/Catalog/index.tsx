@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
 
@@ -53,13 +53,13 @@ export function CatalogScreen() {
             {catalogFilterCategories.map((category) => {
               const active = activeCategory === category.match;
               return (
-                <Text
+                <Pressable
                   key={category.id}
-                  style={[styles.chip, active && styles.chipActive, styles.chipText, active && styles.chipTextActive]}
+                  style={[styles.chip, active && styles.chipActive]}
                   onPress={() => setActiveCategory(active ? null : category.match)}
                 >
-                  {category.label}
-                </Text>
+                  <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{category.label}</Text>
+                </Pressable>
               );
             })}
           </View>
@@ -102,13 +102,13 @@ export function CatalogScreen() {
             {colors.map((color) => {
               const active = activeColors.includes(color);
               return (
-                <Text
+                <Pressable
                   key={color}
-                  style={[styles.chip, active && styles.chipActive, styles.chipText, active && styles.chipTextActive]}
+                  style={[styles.chip, active && styles.chipActive]}
                   onPress={() => toggleColor(color)}
                 >
-                  {color}
-                </Text>
+                  <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{color}</Text>
+                </Pressable>
               );
             })}
           </View>
@@ -117,13 +117,13 @@ export function CatalogScreen() {
             {[32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42].map((size) => {
               const active = activeSizes.includes(size);
               return (
-                <Text
+                <Pressable
                   key={size}
-                  style={[styles.chip, active && styles.chipActive, styles.chipText, active && styles.chipTextActive]}
+                  style={[styles.chip, active && styles.chipActive]}
                   onPress={() => toggleSize(size)}
                 >
-                  {size}
-                </Text>
+                  <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{size}</Text>
+                </Pressable>
               );
             })}
           </View>

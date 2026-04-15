@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from "@react-navigation/native";
+
 export type TabParamList = {
   Home: undefined;
   Catalog: undefined;
@@ -5,8 +7,14 @@ export type TabParamList = {
 };
 
 export type RootStackParamList = {
-  MainTabs: undefined;
-  Login: { redirectTo?: keyof TabParamList } | undefined;
+  MainTabs: NavigatorScreenParams<TabParamList> | undefined;
+  Login:
+    | {
+        redirectTo?: keyof TabParamList;
+        feedback?: "registered";
+        prefillEmail?: string;
+      }
+    | undefined;
   Register: undefined;
   Product: { productId: number };
 };

@@ -84,9 +84,18 @@ export function RegisterScreen({ navigation }: Props) {
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    await register(form);
+    const result = await register(form);
     setSubmitting(false);
-    navigation.replace("Login");
+
+    if (!result.ok) {
+      setErrors({ global: result.message });
+      return;
+    }
+
+    navigation.replace("Login", {
+      feedback: "registered",
+      prefillEmail: result.email,
+    });
   }
 
   return (
@@ -120,6 +129,7 @@ export function RegisterScreen({ navigation }: Props) {
               value={form.email}
               onChangeText={(value) => setForm((current) => ({ ...current, email: value }))}
               autoCapitalize="none"
+              autoCorrect={false}
               keyboardType="email-address"
               error={errors.email}
             />

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { AppFooter } from "../../components/layout/AppFooter";
@@ -138,7 +138,12 @@ export function CartScreen() {
                 <Text style={styles.totalValue}>{formatCurrency(total)}</Text>
               </View>
 
-              <PrimaryButton label="Finalizar Compra" onPress={() => undefined} />
+              <PrimaryButton
+                label="Finalizar Compra"
+                onPress={() =>
+                  Alert.alert("Checkout", "A finalização da compra ainda não está disponível no app mobile.")
+                }
+              />
               <PrimaryButton
                 label="Continuar Comprando"
                 variant="secondary"

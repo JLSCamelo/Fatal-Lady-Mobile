@@ -42,7 +42,6 @@ export function ProductScreen({ navigation, route }: Props) {
   }
 
   function handleAddToCart() {
-    if (!product) return;
     const result = addToCart(product, selectedSize, quantity);
 
     if (!result.ok && result.reason === "auth") {
@@ -55,7 +54,7 @@ export function ProductScreen({ navigation, route }: Props) {
       return;
     }
 
-    navigation.navigate("MainTabs", { screen: "Cart" } as never);
+    navigation.navigate("MainTabs", { screen: "Cart" });
   }
 
   return (

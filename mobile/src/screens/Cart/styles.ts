@@ -15,17 +15,43 @@ export const styles = StyleSheet.create({
     gap: spacing.xl,
   },
   header: {
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   title: {
     color: colors.text,
-    fontFamily: typography.title,
-    fontSize: 34,
+    fontFamily: typography.titleSemi,
+    fontSize: 32,
   },
   subtitle: {
     color: colors.textMuted,
     fontFamily: typography.body,
     fontSize: 14,
+    lineHeight: 20,
+  },
+  emptyState: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    padding: spacing.xl,
+    alignItems: "center",
+    gap: spacing.md,
+    ...shadows.card,
+  },
+  emptyImage: {
+    width: 140,
+    height: 140,
+  },
+  emptyTitle: {
+    color: colors.text,
+    fontFamily: typography.titleSemi,
+    fontSize: 24,
+    textAlign: "center",
+  },
+  emptyText: {
+    color: colors.textMuted,
+    fontFamily: typography.body,
+    fontSize: 14,
+    textAlign: "center",
+    lineHeight: 20,
   },
   summaryCard: {
     backgroundColor: colors.surface,
@@ -37,12 +63,12 @@ export const styles = StyleSheet.create({
   summaryTitle: {
     color: colors.text,
     fontFamily: typography.titleSemi,
-    fontSize: 24,
+    fontSize: 22,
   },
   summaryRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    gap: spacing.md,
   },
   summaryLabel: {
     color: colors.textMuted,
@@ -51,38 +77,18 @@ export const styles = StyleSheet.create({
   },
   summaryValue: {
     color: colors.text,
-    fontFamily: typography.titleSemi,
-    fontSize: 16,
+    fontFamily: typography.body,
+    fontSize: 14,
   },
   totalValue: {
     color: colors.text,
-    fontFamily: typography.title,
+    fontFamily: typography.titleSemi,
     fontSize: 24,
   },
   shippingBox: {
     gap: spacing.md,
-  },
-  emptyState: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.xl,
-    padding: spacing.xl,
-    alignItems: "center",
-    gap: spacing.lg,
-    ...shadows.card,
-  },
-  emptyImage: {
-    width: 120,
-    height: 120,
-  },
-  emptyTitle: {
-    color: colors.text,
-    fontFamily: typography.titleSemi,
-    fontSize: 24,
-  },
-  emptyText: {
-    color: colors.textMuted,
-    fontFamily: typography.body,
-    fontSize: 14,
-    textAlign: "center",
+    padding: spacing.lg,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.lg,
   },
 });

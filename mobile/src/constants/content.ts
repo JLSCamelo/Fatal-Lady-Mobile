@@ -1,7 +1,7 @@
 import { bannerAssets, iconAssets } from "../services/assets";
 
 export const promoMessages = [
-  "Frete Grátis para compras acima de R$ 299",
+  "Frete Grátis para Compras Acima de R$ 299,00",
   "10% OFF na sua primeira compra",
   "5% OFF no pagamento via Pix",
 ];

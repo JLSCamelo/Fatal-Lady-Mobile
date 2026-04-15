@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
+  Alert,
   Image,
   Modal,
   Pressable,
@@ -57,31 +58,75 @@ export function AppHeader() {
           <Text style={styles.topText}>BR</Text>
         </View>
         <Text style={styles.promoText}>{promo}</Text>
-        <Pressable onPress={() => (currentUser ? logout() : openStack("Login"))}>
-          <Text style={styles.topLink}>{currentUser ? "Sair" : "Entrar"}</Text>
-        </Pressable>
+        <View style={styles.topActions}>
+          <Pressable onPress={() => Alert.alert("Ajuda", "A central de ajuda ainda não está disponível no app mobile.")}>
+            <Text style={styles.topLink}>Ajuda</Text>
+          </Pressable>
+          {currentUser ? (
+            <>
+              <Text style={styles.topLink}>Olá, {currentUser.nome.split(" ")[0]}</Text>
+              <Pressable onPress={logout}>
+                <Text style={styles.topLink}>Sair</Text>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable onPress={() => openStack("Login")}>
+                <Text style={styles.topLink}>Entrar</Text>
+              </Pressable>
+              <Pressable onPress={() => openStack("Register")}>
+                <Text style={styles.topLink}>Criar conta</Text>
+              </Pressable>
+            </>
+          )}
+        </View>
       </View>
 
       <View style={styles.navBar}>
-        <Pressable onPress={() => setMenuVisible(true)} style={styles.iconButton}>
-          <Image source={iconAssets.menu} style={styles.mainIcon} />
-        </Pressable>
+        <View style={styles.navLeft}>
+          <Pressable onPress={() => openTab("Home")}>
+            <Text style={styles.navText}>Início</Text>
+          </Pressable>
+          <Pressable onPress={() => openTab("Catalog")}>
+            <Text style={styles.navText}>Catálogo</Text>
+          </Pressable>
+          <Pressable onPress={() => openTab("Cart")}>
+            <Text style={styles.navText}>Carrinho</Text>
+          </Pressable>
+          <Pressable onPress={() => openTab("Catalog")}>
+            <Text style={styles.navText}>Favoritos</Text>
+          </Pressable>
+        </View>
 
         <Pressable style={styles.logoWrap} onPress={() => openTab("Home")}>
           <Image source={iconAssets.logo} style={styles.logo} resizeMode="contain" />
         </Pressable>
 
-        <View style={styles.actionGroup}>
-          <Pressable onPress={() => openStack("Login")} style={styles.iconButton}>
-            <Image source={iconAssets.user} style={styles.mainIcon} />
+        <View style={styles.navRight}>
+          <Pressable onPress={() => openTab("Catalog")}>
+            <Image source={iconAssets.bookmark} style={styles.icon} />
           </Pressable>
-          <Pressable onPress={() => openTab("Cart")} style={styles.iconButton}>
-            <Image source={iconAssets.cart} style={styles.mainIcon} />
+          <Pressable onPress={() => openTab("Cart")} style={styles.cartButton}>
+            <Image source={iconAssets.cart} style={styles.icon} />
             <View style={styles.badge}>
               <Text style={styles.badgeText}>{cartCount}</Text>
             </View>
           </Pressable>
+          <Pressable onPress={() => openTab("Catalog")}>
+            <Image source={iconAssets.shop} style={styles.icon} />
+          </Pressable>
+          <Pressable onPress={() => (currentUser ? openTab("Home") : openStack("Login"))}>
+            <Image source={iconAssets.user} style={styles.icon} />
+          </Pressable>
         </View>
+
+        <Pressable
+          onPress={() => setMenuVisible(true)}
+          style={styles.mobileTrigger}
+          accessibilityLabel="Abrir menu de navegação"
+        >
+          <Text style={styles.mobileBar}>≡</Text>
+        </Pressable>
       </View>
 
       <Modal
@@ -95,7 +140,7 @@ export function AppHeader() {
             <View style={styles.menuHeader}>
               <Text style={styles.menuTitle}>Menu</Text>
               <Pressable onPress={() => setMenuVisible(false)}>
-                <Text style={styles.closeText}>x</Text>
+                <Text style={styles.closeText}>×</Text>
               </Pressable>
             </View>
 
@@ -109,9 +154,23 @@ export function AppHeader() {
               <Pressable onPress={() => { setMenuVisible(false); openTab("Cart"); }}>
                 <Text style={styles.menuLink}>Carrinho</Text>
               </Pressable>
-              <Pressable onPress={() => { setMenuVisible(false); openStack(currentUser ? "Login" : "Register"); }}>
-                <Text style={styles.menuLink}>{currentUser ? "Minha conta" : "Criar conta"}</Text>
+              <Pressable onPress={() => { setMenuVisible(false); openTab("Catalog"); }}>
+                <Text style={styles.menuLink}>Favoritos</Text>
               </Pressable>
+              {currentUser ? (
+                <Pressable onPress={() => { setMenuVisible(false); logout(); }}>
+                  <Text style={styles.menuLink}>Sair</Text>
+                </Pressable>
+              ) : (
+                <>
+                  <Pressable onPress={() => { setMenuVisible(false); openStack("Login"); }}>
+                    <Text style={styles.menuLink}>Entrar</Text>
+                  </Pressable>
+                  <Pressable onPress={() => { setMenuVisible(false); openStack("Register"); }}>
+                    <Text style={styles.menuLink}>Criar conta</Text>
+                  </Pressable>
+                </>
+              )}
             </View>
           </Pressable>
         </Pressable>
@@ -152,10 +211,15 @@ const styles = StyleSheet.create({
     fontFamily: typography.body,
     fontSize: 12,
   },
+  topActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
   topLink: {
     color: colors.text,
     fontFamily: typography.body,
-    fontSize: 12,
+    fontSize: 11,
   },
   navBar: {
     backgroundColor: colors.dark,
@@ -165,16 +229,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  iconButton: {
-    width: 36,
-    height: 36,
+  navLeft: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    gap: spacing.md,
+    display: "none",
   },
-  mainIcon: {
-    width: 22,
-    height: 22,
-    tintColor: colors.surface,
+  navText: {
+    color: colors.background,
+    fontFamily: typography.body,
+    fontSize: 14,
   },
   logoWrap: {
     flex: 1,
@@ -184,27 +248,46 @@ const styles = StyleSheet.create({
     width: 132,
     height: 28,
   },
-  actionGroup: {
+  navRight: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.sm,
+    gap: spacing.md,
+    display: "none",
+  },
+  icon: {
+    width: 22,
+    height: 22,
+    tintColor: colors.surface,
+  },
+  cartButton: {
+    position: "relative",
   },
   badge: {
     position: "absolute",
-    top: 2,
-    right: 0,
-    minWidth: 18,
-    height: 18,
+    top: -6,
+    right: -8,
+    minWidth: 16,
+    height: 16,
     borderRadius: radius.pill,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: spacing.xs,
+    paddingHorizontal: 3,
   },
   badgeText: {
     color: colors.surface,
     fontFamily: typography.body,
     fontSize: 10,
+  },
+  mobileTrigger: {
+    width: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mobileBar: {
+    color: colors.surface,
+    fontSize: 24,
+    lineHeight: 24,
   },
   overlay: {
     flex: 1,
@@ -232,7 +315,7 @@ const styles = StyleSheet.create({
   closeText: {
     color: colors.text,
     fontFamily: typography.body,
-    fontSize: 22,
+    fontSize: 28,
   },
   menuLinks: {
     gap: spacing.lg,

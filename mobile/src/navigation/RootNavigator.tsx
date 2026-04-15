@@ -32,7 +32,7 @@ function tabIconForRoute(routeName: keyof TabParamList) {
     case "Home":
       return iconAssets.shop;
     case "Catalog":
-      return iconAssets.logo;
+      return iconAssets.bookmark;
     case "Cart":
       return iconAssets.cart;
     default:

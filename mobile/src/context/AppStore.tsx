@@ -10,6 +10,7 @@ import {
   Usuario,
 } from "../types/domain";
 import { calculateShipping } from "../services/shippingService";
+import { onlyDigits } from "../utils/format";
 
 interface AppStoreValue {
   products: Produto[];
@@ -20,22 +21,37 @@ interface AppStoreValue {
   cartSubtotal: number;
   login: (payload: LoginPayload) => Promise<{ ok: boolean; message?: string }>;
   logout: () => void;
-  register: (payload: RegisterPayload) => Promise<{ ok: boolean }>;
+  register: (
+    payload: RegisterPayload
+  ) => Promise<{ ok: boolean; message?: string; email?: string }>;
   toggleFavorite: (productId: number) => void;
-  addToCart: (product: Produto, tamanho: number | null, quantidade: number) => { ok: boolean; reason?: "auth" | "size" };
+  addToCart: (
+    product: Produto,
+    tamanho: number | null,
+    quantidade: number
+  ) => { ok: boolean; reason?: "auth" | "size" };
   updateCartItemQuantity: (itemId: string, quantity: number) => void;
   removeCartItem: (itemId: string) => void;
   getProductById: (productId: number) => Produto | undefined;
   getShippingQuote: (cep: string) => Promise<ShippingQuote>;
 }
 
+interface RegisteredAccount extends RegisterPayload {
+  id: number;
+}
+
 const AppStoreContext = createContext<AppStoreValue | undefined>(undefined);
+
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
 
 export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   const [products] = useState<Produto[]>(mockProducts);
   const [currentUser, setCurrentUser] = useState<Usuario | null>(null);
   const [favorites, setFavorites] = useState<number[]>([1001, 2001]);
   const [cartItems, setCartItems] = useState<ItemCarrinho[]>(initialCartItems);
+  const [registeredAccounts, setRegisteredAccounts] = useState<RegisteredAccount[]>([]);
 
   const cartCount = useMemo(
     () => cartItems.reduce((total, item) => total + item.quantidade, 0),
@@ -48,21 +64,29 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   );
 
   async function login(payload: LoginPayload) {
-    if (!payload.email.trim() || !payload.senha.trim()) {
+    const email = normalizeEmail(payload.email);
+    const senha = payload.senha.trim();
+
+    if (!email || !senha) {
       return { ok: false, message: "Usuário ou senha incorretos." };
     }
 
-    const nameSeed = payload.email.split("@")[0] || "Cliente";
-    const firstName = nameSeed.charAt(0).toUpperCase() + nameSeed.slice(1);
+    const account = registeredAccounts.find(
+      (item) => normalizeEmail(item.email) === email && item.senha === senha
+    );
+
+    if (!account) {
+      return { ok: false, message: "Usuário ou senha incorretos." };
+    }
 
     setCurrentUser({
-      id_cliente: 1,
-      nome: `${firstName} Fatal Lady`,
-      email: payload.email.trim(),
-      telefone: "(11) 99999-9999",
-      cpf: "12345678910",
-      genero: "Feminino",
-      data_nascimento: "1997-06-15",
+      id_cliente: account.id,
+      nome: account.nome.trim(),
+      email: email,
+      telefone: account.telefone.trim(),
+      cpf: onlyDigits(account.cpf),
+      genero: account.genero,
+      data_nascimento: account.data_nascimento,
     });
 
     return { ok: true };
@@ -72,8 +96,28 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     setCurrentUser(null);
   }
 
-  async function register(_: RegisterPayload) {
-    return { ok: true };
+  async function register(payload: RegisterPayload) {
+    const email = normalizeEmail(payload.email);
+    const cpf = onlyDigits(payload.cpf);
+
+    if (registeredAccounts.some((item) => normalizeEmail(item.email) === email)) {
+      return { ok: false, message: "Já existe uma conta com este e-mail." };
+    }
+
+    if (registeredAccounts.some((item) => onlyDigits(item.cpf) === cpf)) {
+      return { ok: false, message: "Já existe uma conta com este CPF." };
+    }
+
+    const account: RegisteredAccount = {
+      ...payload,
+      id: registeredAccounts.length + 1,
+      email,
+      cpf,
+    };
+
+    setRegisteredAccounts((current) => [...current, account]);
+
+    return { ok: true, email };
   }
 
   function toggleFavorite(productId: number) {
@@ -155,7 +199,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       getProductById,
       getShippingQuote,
     }),
-    [products, currentUser, favorites, cartItems, cartCount, cartSubtotal]
+    [products, currentUser, favorites, cartItems, cartCount, cartSubtotal, registeredAccounts]
   );
 
   return <AppStoreContext.Provider value={value}>{children}</AppStoreContext.Provider>;

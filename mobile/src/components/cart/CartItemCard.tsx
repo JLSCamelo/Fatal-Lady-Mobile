@@ -2,8 +2,8 @@ import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ItemCarrinho } from "../../types/domain";
-import { colors, radius, shadows, spacing, typography } from "../../theme";
 import { formatCurrency } from "../../utils/format";
+import { colors, radius, shadows, spacing, typography } from "../../theme";
 
 interface CartItemCardProps {
   item: ItemCarrinho;
@@ -21,25 +21,28 @@ export function CartItemCard({
   return (
     <View style={styles.card}>
       <Image source={item.produto.caminhoimagem} style={styles.image} resizeMode="cover" />
-      <View style={styles.content}>
+
+      <View style={styles.body}>
+        <Text style={styles.category}>{item.produto.nome_categoria}</Text>
         <Text style={styles.name}>{item.produto.nome}</Text>
-        <Text style={styles.meta}>ID: {item.produto_id}</Text>
-        <Text style={styles.meta}>Tamanho: {item.tamanho}</Text>
+        <Text style={styles.meta}>Tamanho {item.tamanho}</Text>
         <Text style={styles.price}>{formatCurrency(item.preco_unitario)}</Text>
-      </View>
-      <View style={styles.actions}>
-        <View style={styles.qty}>
-          <Pressable onPress={onDecrease} style={styles.qtyButton}>
-            <Text style={styles.qtyText}>-</Text>
-          </Pressable>
-          <Text style={styles.qtyValue}>{item.quantidade}</Text>
-          <Pressable onPress={onIncrease} style={styles.qtyButton}>
-            <Text style={styles.qtyText}>+</Text>
+
+        <View style={styles.actionsRow}>
+          <View style={styles.quantityControls}>
+            <Pressable style={styles.qtyButton} onPress={onDecrease}>
+              <Text style={styles.qtyText}>-</Text>
+            </Pressable>
+            <Text style={styles.quantity}>{item.quantidade}</Text>
+            <Pressable style={styles.qtyButton} onPress={onIncrease}>
+              <Text style={styles.qtyText}>+</Text>
+            </Pressable>
+          </View>
+
+          <Pressable onPress={onRemove}>
+            <Text style={styles.removeText}>Remover</Text>
           </Pressable>
         </View>
-        <Pressable onPress={onRemove} style={styles.removeButton}>
-          <Text style={styles.removeText}>Remover</Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -47,25 +50,33 @@ export function CartItemCard({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: radius.lg,
+    flexDirection: "row",
+    gap: spacing.md,
     backgroundColor: colors.surface,
+    borderRadius: radius.xl,
     padding: spacing.lg,
-    gap: spacing.lg,
     ...shadows.card,
   },
   image: {
-    width: "100%",
-    height: 220,
-    borderRadius: radius.md,
+    width: 96,
+    height: 96,
+    borderRadius: radius.lg,
     backgroundColor: colors.surfaceAlt,
   },
-  content: {
-    gap: spacing.sm,
+  body: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  category: {
+    color: colors.primary,
+    fontFamily: typography.body,
+    fontSize: 11,
+    textTransform: "uppercase",
   },
   name: {
     color: colors.text,
     fontFamily: typography.body,
-    fontSize: 16,
+    fontSize: 15,
   },
   meta: {
     color: colors.textMuted,
@@ -75,47 +86,42 @@ const styles = StyleSheet.create({
   price: {
     color: colors.text,
     fontFamily: typography.titleSemi,
-    fontSize: 22,
+    fontSize: 20,
   },
-  actions: {
-    gap: spacing.md,
-  },
-  qty: {
+  actionsRow: {
+    marginTop: spacing.sm,
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.md,
+    justifyContent: "space-between",
+  },
+  quantityControls: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
   },
   qtyButton: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.md,
+    width: 32,
+    height: 32,
+    borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.surfaceAlt,
   },
   qtyText: {
     color: colors.text,
+    fontFamily: typography.body,
     fontSize: 18,
   },
-  qtyValue: {
-    minWidth: 24,
+  quantity: {
+    minWidth: 18,
     textAlign: "center",
     color: colors.text,
     fontFamily: typography.body,
-    fontSize: 16,
-  },
-  removeButton: {
-    alignSelf: "flex-start",
-    borderWidth: 1,
-    borderColor: colors.danger,
-    borderRadius: radius.pill,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.lg,
+    fontSize: 14,
   },
   removeText: {
-    color: colors.danger,
+    color: colors.primary,
     fontFamily: typography.body,
     fontSize: 13,
   },

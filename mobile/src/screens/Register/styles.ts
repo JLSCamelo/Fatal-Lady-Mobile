@@ -38,9 +38,6 @@ export const styles = StyleSheet.create({
     fontFamily: typography.titleSemi,
     fontSize: 18,
   },
-  row: {
-    gap: spacing.lg,
-  },
   checkboxRow: {
     flexDirection: "row",
     gap: spacing.md,
