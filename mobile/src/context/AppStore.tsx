@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { initialCartItems, mockProducts } from "../services/mockData";
 import {
@@ -10,7 +10,12 @@ import {
   Usuario,
 } from "../types/domain";
 import { calculateShipping } from "../services/shippingService";
-import { onlyDigits } from "../utils/format";
+import {
+  fetchCatalogProducts,
+  hasBackendApiConfigured,
+  loginWithBackend,
+  registerWithBackend,
+} from "../services/backendApi";
 
 interface AppStoreValue {
   products: Produto[];
@@ -19,6 +24,9 @@ interface AppStoreValue {
   cartItems: ItemCarrinho[];
   cartCount: number;
   cartSubtotal: number;
+  authToken: string | null;
+  productsLoading: boolean;
+  productsError: string | null;
   login: (payload: LoginPayload) => Promise<{ ok: boolean; message?: string }>;
   logout: () => void;
   register: (
@@ -34,24 +42,19 @@ interface AppStoreValue {
   removeCartItem: (itemId: string) => void;
   getProductById: (productId: number) => Produto | undefined;
   getShippingQuote: (cep: string) => Promise<ShippingQuote>;
-}
-
-interface RegisteredAccount extends RegisterPayload {
-  id: number;
+  refreshProducts: () => Promise<void>;
 }
 
 const AppStoreContext = createContext<AppStoreValue | undefined>(undefined);
 
-function normalizeEmail(email: string) {
-  return email.trim().toLowerCase();
-}
-
 export function AppStoreProvider({ children }: { children: React.ReactNode }) {
-  const [products] = useState<Produto[]>(mockProducts);
+  const [products, setProducts] = useState<Produto[]>(mockProducts);
   const [currentUser, setCurrentUser] = useState<Usuario | null>(null);
-  const [favorites, setFavorites] = useState<number[]>([1001, 2001]);
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [cartItems, setCartItems] = useState<ItemCarrinho[]>(initialCartItems);
-  const [registeredAccounts, setRegisteredAccounts] = useState<RegisteredAccount[]>([]);
+  const [authToken, setAuthToken] = useState<string | null>(null);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [productsError, setProductsError] = useState<string | null>(null);
 
   const cartCount = useMemo(
     () => cartItems.reduce((total, item) => total + item.quantidade, 0),
@@ -63,61 +66,70 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     [cartItems]
   );
 
+  async function refreshProducts() {
+    if (!hasBackendApiConfigured()) {
+      setProductsError("Backend não configurado. Usando catálogo local.");
+      return;
+    }
+
+    setProductsLoading(true);
+    setProductsError(null);
+
+    try {
+      const remoteProducts = await fetchCatalogProducts();
+      if (remoteProducts.length > 0) {
+        setProducts(remoteProducts);
+      } else {
+        setProductsError("O backend respondeu sem produtos.");
+      }
+    } catch (error) {
+      setProductsError(
+        error instanceof Error ? error.message : "Falha ao carregar produtos do backend."
+      );
+    } finally {
+      setProductsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    refreshProducts();
+  }, []);
+
   async function login(payload: LoginPayload) {
-    const email = normalizeEmail(payload.email);
-    const senha = payload.senha.trim();
-
-    if (!email || !senha) {
-      return { ok: false, message: "Usuário ou senha incorretos." };
+    try {
+      const result = await loginWithBackend(payload.email, payload.senha);
+      setAuthToken(result.token);
+      setCurrentUser(result.user);
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Falha ao autenticar no backend.",
+      };
     }
-
-    const account = registeredAccounts.find(
-      (item) => normalizeEmail(item.email) === email && item.senha === senha
-    );
-
-    if (!account) {
-      return { ok: false, message: "Usuário ou senha incorretos." };
-    }
-
-    setCurrentUser({
-      id_cliente: account.id,
-      nome: account.nome.trim(),
-      email: email,
-      telefone: account.telefone.trim(),
-      cpf: onlyDigits(account.cpf),
-      genero: account.genero,
-      data_nascimento: account.data_nascimento,
-    });
-
-    return { ok: true };
   }
 
   function logout() {
     setCurrentUser(null);
+    setAuthToken(null);
   }
 
   async function register(payload: RegisterPayload) {
-    const email = normalizeEmail(payload.email);
-    const cpf = onlyDigits(payload.cpf);
-
-    if (registeredAccounts.some((item) => normalizeEmail(item.email) === email)) {
-      return { ok: false, message: "Já existe uma conta com este e-mail." };
+    try {
+      const result = await registerWithBackend(payload);
+      return { ok: true, email: result.email };
+    } catch (error) {
+      return {
+        ok: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Falha ao cadastrar no backend.",
+      };
     }
-
-    if (registeredAccounts.some((item) => onlyDigits(item.cpf) === cpf)) {
-      return { ok: false, message: "Já existe uma conta com este CPF." };
-    }
-
-    const account: RegisteredAccount = {
-      ...payload,
-      id: registeredAccounts.length + 1,
-      email,
-      cpf,
-    };
-
-    setRegisteredAccounts((current) => [...current, account]);
-
-    return { ok: true, email };
   }
 
   function toggleFavorite(productId: number) {
@@ -189,6 +201,9 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       cartItems,
       cartCount,
       cartSubtotal,
+      authToken,
+      productsLoading,
+      productsError,
       login,
       logout,
       register,
@@ -198,8 +213,19 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       removeCartItem,
       getProductById,
       getShippingQuote,
+      refreshProducts,
     }),
-    [products, currentUser, favorites, cartItems, cartCount, cartSubtotal, registeredAccounts]
+    [
+      products,
+      currentUser,
+      favorites,
+      cartItems,
+      cartCount,
+      cartSubtotal,
+      authToken,
+      productsLoading,
+      productsError,
+    ]
   );
 
   return <AppStoreContext.Provider value={value}>{children}</AppStoreContext.Provider>;

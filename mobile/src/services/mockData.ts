@@ -157,20 +157,5 @@ export const mockProducts: Produto[] = [
 export const featuredProducts = mockProducts.slice(0, 4);
 
 export const initialCartItems: ItemCarrinho[] = [
-  {
-    id: "cart-1001-37",
-    produto_id: 1001,
-    produto: mockProducts[0],
-    quantidade: 1,
-    preco_unitario: mockProducts[0].preco,
-    tamanho: 37,
-  },
-  {
-    id: "cart-4001-38",
-    produto_id: 4001,
-    produto: mockProducts[6],
-    quantidade: 1,
-    preco_unitario: mockProducts[6].preco,
-    tamanho: 38,
-  },
+  
 ];

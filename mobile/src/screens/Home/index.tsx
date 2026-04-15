@@ -25,12 +25,13 @@ import {
   sizeGuideTips,
   testimonials,
 } from "../../constants/content";
-import { featuredProducts } from "../../services/mockData";
 import { imageAssets, iconAssets } from "../../services/assets";
+import { useAppStore } from "../../hooks/useAppStore";
 import { styles } from "./styles";
 
 export function HomeScreen() {
   const navigation = useNavigation<any>();
+  const { products } = useAppStore();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const stats = useMemo(
     () => [
@@ -40,6 +41,7 @@ export function HomeScreen() {
     ],
     []
   );
+  const featuredProducts = useMemo(() => products.slice(0, 4), [products]);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>

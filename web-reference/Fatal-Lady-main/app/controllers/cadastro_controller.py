@@ -59,7 +59,10 @@ def cadastro_controller(request: Request,
         cidade=cidade,
         estado=estado,
         complemento=complemento,
-        numero=numero
+        numero=numero,
+        apelido="Principal",
+        destinatario=nome,
+        principal=True,
     )
 
     db.add(novo_endereco)
@@ -101,5 +104,4 @@ def cadastro_controller(request: Request,
   </html>""")
 
     return {"mensagem": "Usuário cadastrado com sucesso!"}
-
 

@@ -1,7 +1,12 @@
 import os
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from dotenv import load_dotenv
+
+
+load_dotenv(Path(__file__).resolve().with_name(".env"))
 
 
 def get_required_env(name: str) -> str:

@@ -1,8 +1,13 @@
 from datetime import datetime, timedelta
 import os
+from pathlib import Path
 from typing import Optional, Dict, Any
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from dotenv import load_dotenv
+
+
+load_dotenv(Path(__file__).resolve().with_name(".env"))
 
 SECRET_KEY: str = os.getenv("SECRET_KEY", "chave-secreta")
 ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
@@ -40,7 +45,7 @@ def criar_token(dados: Dict[str, Any], expires_minutes: int = ACCESS_TOKEN_MINUT
 #Verifica token
 def verificar_token(token: str):
     if not token:
-        return Nonen
+        return None
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload

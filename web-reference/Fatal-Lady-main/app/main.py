@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
 
 # login google e facebook
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 import os
+
+load_dotenv(Path(__file__).resolve().with_name(".env"))
 
 # Rotas
 from app.routes.produto_router import router as produto_router
@@ -28,6 +32,7 @@ from app.routes.editar_usuario_router import router as editar_user_router
 from app.routes.faq_router import router as faq_router
 from app.routes.faleconosco_router import router as faleconosco_router
 from app.routes.trocas_devolucoes_router import router as trocas_router
+from app.routes.mobile_api_router import router as mobile_api_router
 
 # Usuario Inativo
 from datetime import datetime
@@ -47,6 +52,17 @@ app.add_middleware(
     same_site="lax", 
     https_only=False,
     max_age=3600
+)
+
+cors_origins = os.getenv("BACKEND_CORS_ORIGINS", "*")
+allowed_origins = [origin.strip() for origin in cors_origins.split(",") if origin.strip()]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins if allowed_origins else ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -102,6 +118,7 @@ app.include_router(termos_router, tags=["Termos"])
 app.include_router(faq_router, tags=["Perguntas Frequente"])
 app.include_router(trocas_router, tags=["Politicas"])
 app.include_router(faleconosco_router, tags=["Fale Conosco"])
+app.include_router(mobile_api_router)
 
 # --- Rotas de usuário autenticado ---
 app.include_router(painel_usuario_router, tags=["Usuário"])
