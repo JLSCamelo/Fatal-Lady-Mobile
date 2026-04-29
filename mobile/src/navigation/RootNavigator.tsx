@@ -12,6 +12,7 @@ import {
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { HomeScreen } from "../screens/Home";
 import { CatalogScreen } from "../screens/Catalog";
@@ -42,20 +43,42 @@ function tabIconForRoute(routeName: keyof TabParamList) {
 
 function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { cartCount } = useAppStore();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.tabBar}>
+    <View
+      style={[
+        styles.tabBar,
+        { paddingBottom: Math.max(spacing.lg, insets.bottom + spacing.sm) },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const focused = state.index === index;
+        const options = descriptors[route.key].options;
         const label =
-          descriptors[route.key].options.tabBarLabel?.toString() ?? route.name;
+          typeof options.tabBarLabel === "string"
+            ? options.tabBarLabel
+            : options.title ?? route.name;
         const icon = tabIconForRoute(route.name as keyof TabParamList);
 
         return (
           <Pressable
             key={route.key}
             style={styles.tabItem}
-            onPress={() => navigation.navigate(route.name)}
+            accessibilityRole="button"
+            accessibilityState={focused ? { selected: true } : undefined}
+            hitSlop={8}
+            onPress={() => {
+              const event = navigation.emit({
+                type: "tabPress",
+                target: route.key,
+                canPreventDefault: true,
+              });
+
+              if (!focused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
+              }
+            }}
           >
             <View>
               <Image
@@ -116,6 +139,8 @@ const styles = StyleSheet.create({
     ...shadows.floating,
   },
   tabItem: {
+    flex: 1,
+    minHeight: 50,
     alignItems: "center",
     justifyContent: "center",
     gap: spacing.xs,

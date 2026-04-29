@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { filterProducts, getCatalogBounds, groupProductsByCategory } from "../services/catalogService";
 import { Produto } from "../types/domain";
@@ -11,6 +11,11 @@ export function useCatalogFilters(products: Produto[]) {
   const [activeColors, setActiveColors] = useState<string[]>([]);
   const [activeSizes, setActiveSizes] = useState<number[]>([]);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    setPriceMin(bounds.min);
+    setPriceMax(bounds.max);
+  }, [bounds.min, bounds.max]);
 
   const filteredProducts = useMemo(
     () =>

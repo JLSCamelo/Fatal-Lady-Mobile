@@ -31,6 +31,7 @@ export function CartScreen() {
     endereco: "",
     valorFrete: 0,
     prazo: 0,
+    error: undefined,
   });
   const [loadingShipping, setLoadingShipping] = useState(false);
   const total = useMemo(() => cartSubtotal + shipping.valorFrete, [cartSubtotal, shipping.valorFrete]);
@@ -44,6 +45,18 @@ export function CartScreen() {
         endereco: quote.endereco,
         valorFrete: quote.valor_frete,
         prazo: quote.prazo_estimado_dias,
+        error: undefined,
+      }));
+    } catch (error) {
+      setShipping((current) => ({
+        ...current,
+        endereco: "",
+        valorFrete: 0,
+        prazo: 0,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Não foi possível calcular o frete.",
       }));
     } finally {
       setLoadingShipping(false);
@@ -66,7 +79,9 @@ export function CartScreen() {
             </Text>
             <PrimaryButton
               label="Fazer Login"
-              onPress={() => navigation.getParent()?.navigate("Login", { redirectTo: "Cart" })}
+              onPress={() =>
+                (navigation.getParent?.() ?? navigation).navigate("Login", { redirectTo: "Cart" })
+              }
             />
           </View>
         </View>
@@ -126,9 +141,14 @@ export function CartScreen() {
                   placeholder="Seu CEP (00000-000)"
                   value={shipping.cep}
                   onChangeText={(value) =>
-                    setShipping((current) => ({ ...current, cep: maskCep(value) }))
+                    setShipping((current) => ({
+                      ...current,
+                      cep: maskCep(value),
+                      error: undefined,
+                    }))
                   }
                   keyboardType="number-pad"
+                  error={shipping.error}
                 />
                 <PrimaryButton
                   label="CALCULAR"
@@ -136,7 +156,7 @@ export function CartScreen() {
                   loading={loadingShipping}
                 />
                 {shipping.endereco ? (
-                  <View style={styles.shippingBox}>
+                  <View style={styles.shippingResult}>
                     <Text style={styles.summaryLabel}>Endereço: {shipping.endereco}</Text>
                     <Text style={styles.summaryLabel}>Frete: {formatCurrency(shipping.valorFrete)}</Text>
                     <Text style={styles.summaryLabel}>Prazo: {shipping.prazo} dias</Text>

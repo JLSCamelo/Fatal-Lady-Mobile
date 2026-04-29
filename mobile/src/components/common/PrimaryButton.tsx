@@ -37,6 +37,7 @@ export function PrimaryButton({
 
 const styles = StyleSheet.create({
   button: {
+    minHeight: 48,
     borderRadius: radius.pill,
     paddingVertical: spacing.lg,
     paddingHorizontal: spacing.xl,

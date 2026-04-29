@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, Field, validator
 from typing import Optional, List
 import re
 
@@ -57,8 +57,7 @@ class Fabricante(FabricanteBase):
         from_attributes = True
 
 class FabricanteComProdutos(Fabricante):
-    from app.schemas.produto_schema import Produto  # Import condicional
-    produtos: List[Produto] = []
+    produtos: List["Produto"] = Field(default_factory=list)
 
     class Config:
         from_attributes = True
@@ -72,3 +71,8 @@ class FabricanteResumo(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+from app.schemas.produto_schema import Produto
+
+FabricanteComProdutos.model_rebuild()

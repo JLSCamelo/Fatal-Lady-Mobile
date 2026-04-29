@@ -1,20 +1,22 @@
 # Fatal-Lady-Mobile
-Projeto de criação e desenvolvimento de software mobile para uma empresa de moda feminina.
 
-## Como rodar o projeto
+App mobile/web em Expo e React Native para a Fatal Lady, com uma referencia web/API em FastAPI dentro de `web-reference/Fatal-Lady-main`.
 
-Este projeto e um app mobile feito com Expo e React Native. Para rodar, use sempre a pasta `Fatal-Lady-Mobile`, que e onde fica o `package.json`.
+Use sempre a pasta raiz deste repositorio para comandos do app Expo:
 
-### Pre-requisitos
+```bash
+cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
+```
 
-- Node.js instalado.
-- npm instalado.
-- App Expo Go no celular, caso queira testar no aparelho fisico.
-- Android Studio/emulador configurado, caso queira usar `npm run android`.
+## Pre-requisitos
 
-### Rodar pela primeira vez
+- Node.js e npm instalados.
+- App Expo Go no celular, se for testar em aparelho fisico.
+- Android Studio e emulador configurados, se for usar `npm run android`.
+- Python 3 com `venv`, se for rodar a API/site FastAPI em `web-reference/Fatal-Lady-main`.
+- Credenciais locais de banco/Supabase para a API. Nao versionar valores reais de `.env`.
 
-Abra o terminal e rode:
+## Primeira execucao do app Expo
 
 ```bash
 cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
@@ -25,31 +27,46 @@ npm start
 
 Quando o Expo abrir no terminal:
 
-- Para abrir no navegador, aperte `w`.
-- Para abrir no celular, abra o Expo Go e escaneie o QR Code.
-- Para abrir no emulador Android, deixe o emulador aberto e aperte `a`.
+- Aperte `w` para abrir a versao web no navegador.
+- Escaneie o QR Code com Expo Go para abrir no celular.
+- Aperte `a` para abrir no emulador Android, se ele ja estiver iniciado.
 
-### Rodar nas proximas vezes
-
-Depois que as dependencias ja estiverem instaladas, basta:
+Nas proximas vezes:
 
 ```bash
 cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
 npm start
 ```
 
-### Rodar direto no navegador
+## Comandos do app
 
 ```bash
-cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
-npm run web
+npm start        # inicia o Expo
+npm run web      # inicia o Expo diretamente em modo web
+npm run android  # gera/roda no Android com ambiente nativo configurado
+npm run ios      # gera/roda no iOS, apenas em macOS com ambiente nativo configurado
+npm run typecheck # valida TypeScript sem emitir arquivos
 ```
 
-### Rodar o web-reference com uvicorn
+## Configuracao da API no app
 
-O `web-reference` e o backend/site em FastAPI que fica dentro de `web-reference/Fatal-Lady-main`.
+O app le `EXPO_PUBLIC_API_BASE_URL` do arquivo `.env`, criado a partir de `.env.example`.
 
-Na primeira vez, rode:
+```env
+EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
+```
+
+Escolha o valor conforme o alvo:
+
+- Navegador no mesmo computador: `http://127.0.0.1:8000`.
+- Emulador Android: `http://10.0.2.2:8000`.
+- Celular fisico: IP do computador na mesma rede, por exemplo `http://192.168.1.10:8000`.
+
+Sempre que alterar `.env`, pare o Expo com `Ctrl+C` e rode `npm start` novamente.
+
+## Rodar web/mobile com a API local
+
+Em um terminal, suba a API FastAPI:
 
 ```bash
 cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile/web-reference/Fatal-Lady-main
@@ -60,95 +77,86 @@ cp app/.env.example app/.env
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Antes de iniciar, edite `app/.env` com os dados reais do banco/Supabase. Esse backend exige variaveis como `DATABASE_URL`, `SUPABASE_URL` e `SUPABASE_KEY`.
-
-A `DATABASE_URL` deve usar o driver `psycopg`, assim:
+Antes de iniciar a API, edite `app/.env` com credenciais reais locais. O arquivo de exemplo documenta as chaves esperadas, incluindo:
 
 ```env
 DATABASE_URL=postgresql+psycopg://USER:PASSWORD@HOST:6543/postgres
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-service-or-anon-key
+SECRET_KEY=change-me
+BACKEND_CORS_ORIGINS=http://127.0.0.1:8081,http://localhost:8081,http://127.0.0.1:19006,http://localhost:19006
 ```
 
-Nas proximas vezes, rode:
+Tambem e possivel omitir `DATABASE_URL` e preencher `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, `POSTGRES_PORT` e `POSTGRES_DB`; a API monta a URL com esses campos.
 
-```bash
-cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile/web-reference/Fatal-Lady-main
-source .venv/bin/activate
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-Depois acesse:
-
-```text
-http://127.0.0.1:8000
-```
-
-Se aparecer erro dizendo que a porta `8000` ja esta em uso, rode em outra porta:
-
-```bash
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8001
-```
-
-E acesse:
-
-```text
-http://127.0.0.1:8001
-```
-
-### Rodar direto no Android
-
-Use este comando somente se o Android Studio/emulador ja estiver configurado:
-
-```bash
-cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
-npm run android
-```
-
-### Configuracao do backend
-
-O app precisa saber onde esta a API do backend. Essa configuracao fica no arquivo `.env`.
-
-Se o arquivo ainda nao existir, crie com:
-
-```bash
-cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
-cp .env.example .env
-```
-
-Dentro do `.env`, existe esta variavel:
-
-```env
-EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
-```
-
-Escolha o valor certo:
-
-- Se rodar no navegador do mesmo computador, use `http://127.0.0.1:8000`.
-- Se rodar no emulador Android, use `http://10.0.2.2:8000`.
-- Se rodar no celular fisico, use o IP do computador na rede, por exemplo `http://192.168.0.10:8000`.
-
-Sempre que mudar o `.env`, pare o Expo com `Ctrl+C` e rode `npm start` de novo.
-
-### Resumo rapido
-
-Na maioria das vezes, o comando que voce vai usar e este:
+Em outro terminal, rode o app:
 
 ```bash
 cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
 npm start
 ```
 
-Depois aperte `w` para web ou escaneie o QR Code com o Expo Go.
+Depois escolha `w`, `a` ou Expo Go conforme o alvo.
 
-### Comandos disponiveis
+## API, site e banco
 
-```bash
-npm start        # inicia o Expo
-npm run web      # abre a versao web
-npm run android  # gera/roda no Android com ambiente nativo configurado
-npm run ios      # gera/roda no iOS, apenas em macOS com ambiente nativo configurado
+O backend/site fica em:
+
+```text
+web-reference/Fatal-Lady-main
 ```
 
-### Documentacao da sprint mobile
+Com a API rodando, acesse:
+
+```text
+http://127.0.0.1:8000
+http://127.0.0.1:8000/api/mobile/health
+```
+
+Se a porta `8000` estiver em uso, use outra porta:
+
+```bash
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8001
+```
+
+Nesse caso, ajuste tambem `EXPO_PUBLIC_API_BASE_URL` no `.env` do app para a mesma porta.
+
+O banco usado pela API vem de `app/.env`. Nao ha comando documentado aqui para criar, resetar ou migrar banco automaticamente; antes de rodar fluxos que dependem de dados, confirme que o banco configurado ja tem as tabelas e dados necessarios.
+
+## Validacao local
+
+Use a menor validacao que cobre a mudanca:
+
+```bash
+cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile
+npm run typecheck
+```
+
+Para validar a API/site:
+
+```bash
+cd /home/carlosz/Mobile_FatalLady/Fatal-Lady-Mobile/web-reference/Fatal-Lady-main
+source .venv/bin/activate
+pytest
+```
+
+Validacao manual recomendada:
+
+- Abrir o app web pelo Expo e confirmar que carrega sem erro de `.env`.
+- Acessar `/api/mobile/health` na API local.
+- Testar catalogo, detalhe de produto, login/cadastro e carrinho com uma base local adequada.
+- Repetir o fluxo em navegador, emulador Android ou celular fisico conforme a entrega.
+
+## Fluxo de desenvolvimento
+
+1. Atualize `.env` do app e `web-reference/Fatal-Lady-main/app/.env` localmente, sem commitar segredos.
+2. Rode a API em um terminal.
+3. Rode o Expo em outro terminal.
+4. Faça a mudanca no menor escopo possivel.
+5. Rode `npm run typecheck` para mudancas no app e `pytest` para mudancas da API/site.
+6. Documente no PR o que foi validado manualmente e qualquer dependencia de banco/dados.
+
+## Documentacao da sprint mobile
 
 A sprint de produtos, detalhe do produto e responsividade esta documentada em:
 
@@ -156,8 +164,17 @@ A sprint de produtos, detalhe do produto e responsividade esta documentada em:
 docs/sprint-produtos-responsivo.md
 ```
 
-### Problemas comuns
+O guia de organizacao de pastas e responsabilidades do repositorio fica em:
 
-- Se o app mostrar erro pedindo `EXPO_PUBLIC_API_BASE_URL`, confira se o arquivo `.env` existe e reinicie o Expo.
-- Se estiver no celular e o app nao conectar no backend, troque `127.0.0.1` pelo IP do computador.
-- Se mudar o `.env`, pare o Expo e rode `npm start` novamente.
+```text
+docs/estrutura-organizacao.md
+```
+
+## Problemas comuns
+
+- Erro pedindo `EXPO_PUBLIC_API_BASE_URL`: confira se `.env` existe e reinicie o Expo.
+- Celular fisico nao conecta na API: use o IP do computador na rede em vez de `127.0.0.1`.
+- Emulador Android nao conecta na API local: use `http://10.0.2.2:8000`.
+- Mudou qualquer `.env`: reinicie o processo correspondente.
+- API falha ao iniciar por variavel obrigatoria ausente: confira `web-reference/Fatal-Lady-main/app/.env`.
+- API falha por conexao com banco: confirme host, porta, usuario, senha e permissao do banco configurado.

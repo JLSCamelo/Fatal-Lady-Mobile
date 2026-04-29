@@ -1,6 +1,8 @@
 from pydantic import BaseModel, validator
 from typing import Optional, List
 
+from app.schemas.categoria_schema import Categoria
+
 # ---------- SCHEMAS BASE ----------
 class ProdutoBase(BaseModel):
     nome: str
@@ -51,9 +53,12 @@ class Produto(ProdutoBase):
         from_attributes = True
 
 class ProdutoComCategoria(Produto):
-    from app.schemas.categoria_schema import Categoria
     categoria: Optional[Categoria] = None
 
 class ProdutoDetalhado(ProdutoComCategoria):
-    from app.schemas.fabricante_schema import Fabricante
-    fabricante: Optional[Fabricante] = None
+    fabricante: Optional["Fabricante"] = None
+
+
+from app.schemas.fabricante_schema import Fabricante
+
+ProdutoDetalhado.model_rebuild()

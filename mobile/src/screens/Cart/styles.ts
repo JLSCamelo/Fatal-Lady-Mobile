@@ -72,6 +72,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: spacing.md,
+    flexWrap: "wrap",
   },
   summaryLabel: {
     color: colors.textMuted,
@@ -87,11 +88,17 @@ export const styles = StyleSheet.create({
     color: colors.text,
     fontFamily: typography.titleSemi,
     fontSize: 24,
+    flexShrink: 1,
+    textAlign: "right",
   },
   shippingBox: {
     gap: spacing.md,
     padding: spacing.lg,
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.lg,
+  },
+  shippingResult: {
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
   },
 });

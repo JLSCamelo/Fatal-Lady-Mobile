@@ -3,4 +3,5 @@ export interface CartShippingState {
   endereco: string;
   valorFrete: number;
   prazo: number;
+  error?: string;
 }

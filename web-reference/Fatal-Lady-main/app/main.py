@@ -36,16 +36,14 @@ from app.routes.mobile_api_router import router as mobile_api_router
 
 # Usuario Inativo
 from datetime import datetime
-from app.database import *
+from app.database import SessionLocal
 from app.models.usuario_model import UsuarioDB
-import jwt
-from app.auth import *
+from app.auth import ALGORITHM, SECRET_KEY
 from jose import jwt, ExpiredSignatureError, JWTError
 
 app = FastAPI(title="Loja de Sapatos")
 
 # usado para login com google e facebook (antes das rotas)
-load_dotenv()
 app.add_middleware(
     SessionMiddleware,
     secret_key= os.getenv("SECRET_KEY", "FATALLADY@134"),  
@@ -85,11 +83,13 @@ async def verificar_usuario_inativo(request, call_next):
 
             if user_id:
                 db = SessionLocal()
-                user = db.query(UsuarioDB).filter(UsuarioDB.id_cliente == user_id).first()
-                if user:
-                    user.ultima_atividade = datetime.utcnow()
-                    db.commit()
-                db.close()
+                try:
+                    user = db.query(UsuarioDB).filter(UsuarioDB.id_cliente == user_id).first()
+                    if user:
+                        user.ultima_atividade = datetime.utcnow()
+                        db.commit()
+                finally:
+                    db.close()
 
         # TOKEN EXPIRADO → ignora
         except ExpiredSignatureError:

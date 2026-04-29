@@ -90,6 +90,7 @@ def serialize_product(produto: ProdutoDB) -> dict:
 
 
 def serialize_user(usuario: UsuarioDB) -> dict:
+    data_nascimento = usuario.data_nascimento
     return {
         "id_cliente": usuario.id_cliente,
         "nome": usuario.nome,
@@ -98,9 +99,9 @@ def serialize_user(usuario: UsuarioDB) -> dict:
         "cpf": usuario.cpf,
         "genero": usuario.genero,
         "data_nascimento": (
-            usuario.data_nascimento.isoformat()
-            if hasattr(usuario.data_nascimento, "isoformat")
-            else str(usuario.data_nascimento)
+            data_nascimento.isoformat()
+            if hasattr(data_nascimento, "isoformat")
+            else data_nascimento
         ),
         "is_admin": bool(usuario.is_admin),
     }
@@ -247,7 +248,7 @@ def mobile_register(payload: MobileRegisterRequest, db: Session = Depends(get_db
             data_nascimento=payload.data_nascimento,
         )
         db.add(novo_usuario)
-        db.commit()
+        db.flush()
         db.refresh(novo_usuario)
 
         sync_serial_sequence(db, "enderecos", "id")
@@ -270,6 +271,9 @@ def mobile_register(payload: MobileRegisterRequest, db: Session = Depends(get_db
     except IntegrityError as exc:
         db.rollback()
         raise HTTPException(status_code=409, detail="Não foi possível concluir o cadastro por conflito de dados.") from exc
+    except Exception:
+        db.rollback()
+        raise
 
     return {
         "ok": True,

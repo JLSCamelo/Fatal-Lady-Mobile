@@ -42,6 +42,7 @@ export function CatalogScreen() {
     () => Array.from(new Set(products.map((item) => item.cor))),
     [products]
   );
+  const stackNavigation = navigation.getParent?.() ?? navigation;
 
   const activeFilterCount =
     (activeCategory ? 1 : 0) + activeColors.length + activeSizes.length + (search.trim() ? 1 : 0);
@@ -186,7 +187,7 @@ export function CatalogScreen() {
                     isFavorite={favorites.includes(product.id_produto)}
                     onFavoritePress={() => toggleFavorite(product.id_produto)}
                     onPress={() =>
-                      navigation.getParent()?.navigate("Product", {
+                      stackNavigation.navigate("Product", {
                         productId: product.id_produto,
                       })
                     }

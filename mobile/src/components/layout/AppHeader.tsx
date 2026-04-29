@@ -113,9 +113,11 @@ export function AppHeader() {
           </Pressable>
           <Pressable onPress={() => openTab("Cart")} style={styles.cartButton}>
             <Image source={iconAssets.cart} style={styles.icon} />
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{cartCount}</Text>
-            </View>
+            {cartCount > 0 ? (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{cartCount}</Text>
+              </View>
+            ) : null}
           </Pressable>
           <Pressable onPress={() => openTab("Catalog")}>
             <Image source={iconAssets.shop} style={styles.icon} />

@@ -20,6 +20,11 @@ export function groupProductsByCategory(products: Produto[]) {
 
 export function getCatalogBounds(products: Produto[]) {
   const prices = products.map((item) => item.preco);
+
+  if (prices.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
   return {
     min: Math.floor(Math.min(...prices)),
     max: Math.ceil(Math.max(...prices)),

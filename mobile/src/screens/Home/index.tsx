@@ -47,6 +47,7 @@ export function HomeScreen() {
     []
   );
   const featuredProducts = useMemo(() => products.slice(0, 4), [products]);
+  const stackNavigation = navigation.getParent?.() ?? navigation;
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -91,7 +92,7 @@ export function HomeScreen() {
               key={product.id_produto}
               product={product}
               variant="featured"
-              onPress={() => navigation.getParent()?.navigate("Product", { productId: product.id_produto })}
+              onPress={() => stackNavigation.navigate("Product", { productId: product.id_produto })}
             />
           ))}
         </ScrollView>
