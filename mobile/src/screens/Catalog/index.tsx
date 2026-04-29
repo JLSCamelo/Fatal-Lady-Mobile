@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, useWindowDimensions, View } from "react-native";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
 
@@ -12,10 +12,12 @@ import { TextField } from "../../components/common/TextField";
 import { useAppStore } from "../../hooks/useAppStore";
 import { useCatalogFilters } from "../../hooks/useCatalogFilters";
 import { formatCurrency } from "../../utils/format";
+import { getPagePadding } from "../../theme";
 import { styles } from "./styles";
 
 export function CatalogScreen() {
   const navigation = useNavigation<any>();
+  const { width } = useWindowDimensions();
   const { products, favorites, toggleFavorite } = useAppStore();
   const {
     bounds,
@@ -41,15 +43,39 @@ export function CatalogScreen() {
     [products]
   );
 
+  const activeFilterCount =
+    (activeCategory ? 1 : 0) + activeColors.length + activeSizes.length + (search.trim() ? 1 : 0);
+
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 32 }}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={[styles.content, { paddingBottom: getPagePadding(width) }]}
+      showsVerticalScrollIndicator={false}
+    >
       <AppHeader />
 
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingHorizontal: getPagePadding(width) }]}>
         <View style={styles.headerCard}>
-          <Text style={styles.title}>CATÁLOGO</Text>
+          <View style={styles.titleRow}>
+            <View style={styles.titleCopy}>
+              <Text style={styles.eyebrow}>Produtos</Text>
+              <Text style={styles.title}>Catálogo Fatal Lady</Text>
+              <Text style={styles.subtitle}>
+                {filteredProducts.length} de {products.length} produtos encontrados
+              </Text>
+            </View>
+            {activeFilterCount > 0 ? (
+              <Pressable style={styles.clearPill} onPress={clearAll}>
+                <Text style={styles.clearPillText}>Limpar {activeFilterCount}</Text>
+              </Pressable>
+            ) : null}
+          </View>
 
-          <View style={styles.chipRow}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryChipList}
+          >
             {catalogFilterCategories.map((category) => {
               const active = activeCategory === category.match;
               return (
@@ -62,7 +88,7 @@ export function CatalogScreen() {
                 </Pressable>
               );
             })}
-          </View>
+          </ScrollView>
 
           <TextField
             label="Buscar Produto"
@@ -98,34 +124,40 @@ export function CatalogScreen() {
             />
           </View>
 
-          <View style={styles.chipRow}>
-            {colors.map((color) => {
-              const active = activeColors.includes(color);
-              return (
-                <Pressable
-                  key={color}
-                  style={[styles.chip, active && styles.chipActive]}
-                  onPress={() => toggleColor(color)}
-                >
-                  <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{color}</Text>
-                </Pressable>
-              );
-            })}
+          <View style={styles.filterBlock}>
+            <Text style={styles.filterLabel}>Cores</Text>
+            <View style={styles.chipRow}>
+              {colors.map((color) => {
+                const active = activeColors.includes(color);
+                return (
+                  <Pressable
+                    key={color}
+                    style={[styles.chip, active && styles.chipActive]}
+                    onPress={() => toggleColor(color)}
+                  >
+                    <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{color}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
 
-          <View style={styles.chipRow}>
-            {[32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42].map((size) => {
-              const active = activeSizes.includes(size);
-              return (
-                <Pressable
-                  key={size}
-                  style={[styles.chip, active && styles.chipActive]}
-                  onPress={() => toggleSize(size)}
-                >
-                  <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{size}</Text>
-                </Pressable>
-              );
-            })}
+          <View style={styles.filterBlock}>
+            <Text style={styles.filterLabel}>Numeração</Text>
+            <View style={styles.chipRow}>
+              {[32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42].map((size) => {
+                const active = activeSizes.includes(size);
+                return (
+                  <Pressable
+                    key={size}
+                    style={[styles.chip, active && styles.chipActive]}
+                    onPress={() => toggleSize(size)}
+                  >
+                    <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{size}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
 
           <PrimaryButton label="Limpar filtros" variant="secondary" onPress={clearAll} />
@@ -143,10 +175,10 @@ export function CatalogScreen() {
             <View key={categoryName} style={styles.section}>
               <View style={styles.categoryHeader}>
                 <Text style={styles.categoryTitle}>{categoryName}</Text>
-                <Text style={styles.categoryHint}>Deslize para ver mais</Text>
+                <Text style={styles.categoryHint}>{categoryProducts.length} modelos</Text>
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
+              <View style={styles.productGrid}>
                 {categoryProducts.map((product) => (
                   <ProductCard
                     key={product.id_produto}
@@ -160,7 +192,7 @@ export function CatalogScreen() {
                     }
                   />
                 ))}
-              </ScrollView>
+              </View>
             </View>
           ))
         )}

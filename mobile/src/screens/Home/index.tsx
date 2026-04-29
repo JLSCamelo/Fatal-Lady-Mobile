@@ -5,6 +5,7 @@ import {
   Pressable,
   ScrollView,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,11 +28,15 @@ import {
 } from "../../constants/content";
 import { imageAssets, iconAssets } from "../../services/assets";
 import { useAppStore } from "../../hooks/useAppStore";
+import { getPagePadding, isCompactWidth } from "../../theme";
 import { styles } from "./styles";
 
 export function HomeScreen() {
   const navigation = useNavigation<any>();
+  const { width } = useWindowDimensions();
   const { products } = useAppStore();
+  const compact = isCompactWidth(width);
+  const pagePadding = getPagePadding(width);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const stats = useMemo(
     () => [
@@ -48,10 +53,15 @@ export function HomeScreen() {
       <AppHeader />
 
       <ImageBackground source={imageAssets.homeMainBackground} style={styles.hero} resizeMode="cover">
-        <LinearGradient colors={["rgba(0,0,0,0.15)", "rgba(0,0,0,0.65)"]} style={styles.heroOverlay}>
+        <LinearGradient
+          colors={["rgba(0,0,0,0.15)", "rgba(0,0,0,0.65)"]}
+          style={[styles.heroOverlay, { paddingHorizontal: pagePadding }]}
+        >
           <View style={styles.heroContent}>
-            <Text style={styles.heroTitle}>Elegância Diária</Text>
-            <Text style={styles.heroSubtitle}>Saltos Finos, Atitude Marcante.</Text>
+            <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>Elegância Diária</Text>
+            <Text style={[styles.heroSubtitle, compact && styles.heroSubtitleCompact]}>
+              Saltos Finos, Atitude Marcante.
+            </Text>
             <PrimaryButton
               label="Descubra a Coleção"
               onPress={() => navigation.navigate("Catalog")}
@@ -60,7 +70,7 @@ export function HomeScreen() {
         </LinearGradient>
       </ImageBackground>
 
-      <View style={styles.benefitsBar}>
+      <View style={[styles.benefitsBar, { paddingHorizontal: pagePadding }]}>
         {benefitsBar.map((item) => (
           <View key={item.title} style={styles.benefitCard}>
             <Image source={item.icon} style={styles.benefitIcon} />
@@ -70,7 +80,7 @@ export function HomeScreen() {
         ))}
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { paddingHorizontal: pagePadding }]}>
         <View style={styles.featuredHeader}>
           <Text style={styles.featuredHeaderTitle}>Coleção em Destaque</Text>
           <Text style={styles.featuredHeaderSubtitle}>Descubra as peças mais desejadas da temporada</Text>
@@ -92,7 +102,7 @@ export function HomeScreen() {
         />
       </View>
 
-      <View style={[styles.section, styles.storySection]}>
+      <View style={[styles.section, styles.storySection, { paddingHorizontal: pagePadding }]}>
         <View style={styles.storyImageWrap}>
           <Image source={imageAssets.aboutUs} style={styles.storyImage} resizeMode="cover" />
         </View>
@@ -119,7 +129,7 @@ export function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { paddingHorizontal: pagePadding }]}>
         <SectionHeader
           title="Explore por Categoria"
           subtitle="Encontre o estilo perfeito para cada momento"
@@ -141,7 +151,7 @@ export function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { paddingHorizontal: pagePadding }]}>
         <SectionHeader title="Nossas Coleções" />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.bannerList}>
           {collectionBanners.map((banner, index) => (
@@ -150,7 +160,7 @@ export function HomeScreen() {
         </ScrollView>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { paddingHorizontal: pagePadding }]}>
         <SectionHeader title="O que Nossas Clientes Dizem" />
         <View style={styles.testimonialGrid}>
           {testimonials.map((item) => (
@@ -164,7 +174,7 @@ export function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { paddingHorizontal: pagePadding }]}>
         <SectionHeader
           title="Guia de Tamanhos"
           subtitle="Encontre o tamanho perfeito para você"
@@ -197,7 +207,7 @@ export function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { paddingHorizontal: pagePadding }]}>
         <SectionHeader
           title="Dúvidas Frequentes"
           subtitle="Tire suas principais dúvidas antes de comprar"
@@ -222,7 +232,7 @@ export function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.newsletterSection}>
+      <View style={[styles.newsletterSection, { paddingHorizontal: pagePadding }]}>
         <View style={styles.newsletterHeader}>
           <Text style={styles.newsletterSectionTitle}>Benefícios Exclusivos</Text>
           <Text style={styles.newsletterSectionSubtitle}>Cadastre-se e aproveite vantagens especiais</Text>

@@ -11,8 +11,11 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   container: {
-    padding: spacing.xl,
     gap: spacing.xl,
+    width: "100%",
+    maxWidth: 920,
+    alignSelf: "center",
+    paddingVertical: spacing.xl,
   },
   header: {
     gap: spacing.xs,

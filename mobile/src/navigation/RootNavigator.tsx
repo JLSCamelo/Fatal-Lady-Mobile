@@ -63,7 +63,7 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                 style={[styles.tabIcon, focused && styles.tabIconFocused]}
                 resizeMode="contain"
               />
-              {route.name === "Cart" ? (
+              {route.name === "Cart" && cartCount > 0 ? (
                 <View style={styles.tabBadge}>
                   <Text style={styles.tabBadgeText}>{cartCount}</Text>
                 </View>

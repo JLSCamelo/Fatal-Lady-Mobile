@@ -16,7 +16,6 @@ export const styles = StyleSheet.create({
   heroOverlay: {
     minHeight: 430,
     justifyContent: "flex-end",
-    paddingHorizontal: spacing.xl,
     paddingTop: spacing.xxxl,
     paddingBottom: spacing.xl,
   },
@@ -29,14 +28,22 @@ export const styles = StyleSheet.create({
     fontSize: 42,
     textTransform: "uppercase",
   },
+  heroTitleCompact: {
+    fontSize: 34,
+    lineHeight: 38,
+  },
   heroSubtitle: {
     color: "rgb(255, 196, 196)",
     fontFamily: typography.body,
     fontSize: 22,
   },
+  heroSubtitleCompact: {
+    fontSize: 18,
+    lineHeight: 24,
+  },
   benefitsBar: {
     backgroundColor: colors.primary,
-    padding: spacing.lg,
+    paddingVertical: spacing.lg,
     gap: spacing.lg,
   },
   benefitCard: {
@@ -59,9 +66,11 @@ export const styles = StyleSheet.create({
     fontSize: 13,
   },
   section: {
-    paddingHorizontal: spacing.xl,
     paddingVertical: spacing.xl,
     gap: spacing.lg,
+    width: "100%",
+    maxWidth: 1180,
+    alignSelf: "center",
   },
   featuredHeader: {
     gap: spacing.sm,
@@ -137,7 +146,9 @@ export const styles = StyleSheet.create({
     gap: spacing.lg,
   },
   categoryCard: {
-    width: "47%",
+    flexBasis: 156,
+    flexGrow: 1,
+    maxWidth: 260,
     backgroundColor: colors.background,
     borderRadius: 10,
     paddingVertical: 19,
@@ -304,7 +315,6 @@ export const styles = StyleSheet.create({
   newsletterSection: {
     backgroundColor: colors.primary,
     paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.xl,
     gap: spacing.lg,
   },
   newsletterHeader: {

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { Alert, Image, ScrollView, Text, useWindowDimensions, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { AppFooter } from "../../components/layout/AppFooter";
@@ -10,11 +10,14 @@ import { CartItemCard } from "../../components/cart/CartItemCard";
 import { useAppStore } from "../../hooks/useAppStore";
 import { imageAssets } from "../../services/assets";
 import { formatCurrency, maskCep } from "../../utils/format";
+import { getPagePadding } from "../../theme";
 import { CartShippingState } from "./types";
 import { styles } from "./styles";
 
 export function CartScreen() {
   const navigation = useNavigation<any>();
+  const { width } = useWindowDimensions();
+  const pagePadding = getPagePadding(width);
   const {
     currentUser,
     cartItems,
@@ -49,9 +52,13 @@ export function CartScreen() {
 
   if (!currentUser) {
     return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={[styles.content, { paddingBottom: pagePadding }]}
+        showsVerticalScrollIndicator={false}
+      >
         <AppHeader />
-        <View style={styles.container}>
+        <View style={[styles.container, { paddingHorizontal: pagePadding }]}>
           <View style={styles.emptyState}>
             <Text style={styles.emptyTitle}>Login Necessário</Text>
             <Text style={styles.emptyText}>
@@ -69,9 +76,13 @@ export function CartScreen() {
   }
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={[styles.content, { paddingBottom: pagePadding }]}
+      showsVerticalScrollIndicator={false}
+    >
       <AppHeader />
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingHorizontal: pagePadding }]}>
         <View style={styles.header}>
           <Text style={styles.title}>Meu Carrinho</Text>
           <Text style={styles.subtitle}>Revise seus produtos antes de finalizar a compra</Text>

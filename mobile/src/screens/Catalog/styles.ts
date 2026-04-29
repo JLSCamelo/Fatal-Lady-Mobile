@@ -7,26 +7,73 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  content: {
+    backgroundColor: colors.background,
+  },
   container: {
-    padding: spacing.xl,
     gap: spacing.xl,
+    width: "100%",
+    maxWidth: 1180,
+    alignSelf: "center",
+    paddingVertical: spacing.xl,
   },
   headerCard: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     padding: 18,
     gap: spacing.lg,
     ...shadows.card,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: spacing.lg,
+    flexWrap: "wrap",
+  },
+  titleCopy: {
+    flex: 1,
+    minWidth: 220,
+    gap: spacing.xs,
+  },
+  eyebrow: {
+    color: colors.primary,
+    fontFamily: typography.body,
+    fontSize: 12,
+    textTransform: "uppercase",
   },
   title: {
     color: colors.text,
     fontFamily: typography.titleSemi,
     fontSize: 28,
   },
+  subtitle: {
+    color: colors.textMuted,
+    fontFamily: typography.body,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  clearPill: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+  },
+  clearPillText: {
+    color: colors.primary,
+    fontFamily: typography.body,
+    fontSize: 12,
+  },
   chipRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: spacing.sm,
+  },
+  categoryChipList: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    paddingRight: spacing.md,
   },
   chip: {
     paddingHorizontal: spacing.lg,
@@ -40,12 +87,6 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  chipText: {
-    color: colors.text,
-  },
-  chipTextActive: {
-    color: colors.surface,
-  },
   chipLabel: {
     color: colors.text,
     fontFamily: typography.body,
@@ -53,6 +94,14 @@ export const styles = StyleSheet.create({
   },
   chipLabelActive: {
     color: colors.surface,
+  },
+  filterBlock: {
+    gap: spacing.sm,
+  },
+  filterLabel: {
+    color: colors.text,
+    fontFamily: typography.titleSemi,
+    fontSize: 15,
   },
   rangeLabelRow: {
     flexDirection: "row",
@@ -97,8 +146,11 @@ export const styles = StyleSheet.create({
     fontFamily: typography.body,
     fontSize: 12,
   },
-  horizontalList: {
+  productGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.lg,
+    justifyContent: "center",
   },
   emptyCard: {
     backgroundColor: colors.surface,

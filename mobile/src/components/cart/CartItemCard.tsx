@@ -1,9 +1,9 @@
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import { ItemCarrinho } from "../../types/domain";
 import { formatCurrency } from "../../utils/format";
-import { colors, radius, shadows, spacing, typography } from "../../theme";
+import { colors, isCompactWidth, radius, shadows, spacing, typography } from "../../theme";
 
 interface CartItemCardProps {
   item: ItemCarrinho;
@@ -18,9 +18,16 @@ export function CartItemCard({
   onDecrease,
   onRemove,
 }: CartItemCardProps) {
+  const { width } = useWindowDimensions();
+  const compact = isCompactWidth(width);
+
   return (
-    <View style={styles.card}>
-      <Image source={item.produto.caminhoimagem} style={styles.image} resizeMode="cover" />
+    <View style={[styles.card, compact && styles.cardCompact]}>
+      <Image
+        source={item.produto.caminhoimagem}
+        style={[styles.image, compact && styles.imageCompact]}
+        resizeMode="cover"
+      />
 
       <View style={styles.body}>
         <Text style={styles.category}>{item.produto.nome_categoria}</Text>
@@ -28,7 +35,7 @@ export function CartItemCard({
         <Text style={styles.meta}>Tamanho {item.tamanho}</Text>
         <Text style={styles.price}>{formatCurrency(item.preco_unitario)}</Text>
 
-        <View style={styles.actionsRow}>
+        <View style={[styles.actionsRow, compact && styles.actionsRowCompact]}>
           <View style={styles.quantityControls}>
             <Pressable style={styles.qtyButton} onPress={onDecrease}>
               <Text style={styles.qtyText}>-</Text>
@@ -57,11 +64,18 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     ...shadows.card,
   },
+  cardCompact: {
+    flexDirection: "column",
+  },
   image: {
     width: 96,
     height: 96,
     borderRadius: radius.lg,
     backgroundColor: colors.surfaceAlt,
+  },
+  imageCompact: {
+    width: "100%",
+    height: 180,
   },
   body: {
     flex: 1,
@@ -93,6 +107,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  actionsRowCompact: {
+    alignItems: "flex-start",
+    gap: spacing.md,
+    flexWrap: "wrap",
   },
   quantityControls: {
     flexDirection: "row",

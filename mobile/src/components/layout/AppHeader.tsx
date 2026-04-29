@@ -14,14 +14,14 @@ import { useNavigation } from "@react-navigation/native";
 import { promoMessages } from "../../constants/content";
 import { useAppStore } from "../../hooks/useAppStore";
 import { iconAssets } from "../../services/assets";
-import { colors, radius, shadows, spacing, typography } from "../../theme";
+import { colors, isCompactWidth, radius, shadows, spacing, typography } from "../../theme";
 
 export function AppHeader() {
   const navigation = useNavigation<any>();
   const { cartCount, currentUser, logout } = useAppStore();
   const [menuVisible, setMenuVisible] = useState(false);
   const { width } = useWindowDimensions();
-  const compact = width < 420;
+  const compact = isCompactWidth(width);
   const promo = useMemo(
     () => promoMessages[new Date().getSeconds() % promoMessages.length],
     []
@@ -88,7 +88,7 @@ export function AppHeader() {
       </View>
 
       <View style={[styles.navBar, compact && styles.navBarCompact]}>
-        <View style={styles.navLeft}>
+        <View style={[styles.navLeft, compact && styles.navSectionHidden]}>
           <Pressable onPress={() => openTab("Home")}>
             <Text style={styles.navText}>Início</Text>
           </Pressable>
@@ -107,7 +107,7 @@ export function AppHeader() {
           <Image source={iconAssets.logo} style={[styles.logo, compact && styles.logoCompact]} resizeMode="contain" />
         </Pressable>
 
-        <View style={styles.navRight}>
+        <View style={[styles.navRight, compact && styles.navSectionHidden]}>
           <Pressable onPress={() => openTab("Catalog")}>
             <Image source={iconAssets.bookmark} style={styles.icon} />
           </Pressable>
@@ -127,7 +127,7 @@ export function AppHeader() {
 
         <Pressable
           onPress={() => setMenuVisible(true)}
-          style={styles.mobileTrigger}
+          style={[styles.mobileTrigger, !compact && styles.mobileTriggerHidden]}
           accessibilityLabel="Abrir menu de navegação"
         >
           <Text style={styles.mobileBar}>≡</Text>
@@ -261,6 +261,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
+    flex: 1,
+  },
+  navSectionHidden: {
     display: "none",
   },
   navText: {
@@ -284,7 +287,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
-    display: "none",
+    flex: 1,
+    justifyContent: "flex-end",
   },
   icon: {
     width: 22,
@@ -315,6 +319,9 @@ const styles = StyleSheet.create({
     width: 36,
     alignItems: "center",
     justifyContent: "center",
+  },
+  mobileTriggerHidden: {
+    display: "none",
   },
   mobileBar: {
     color: colors.surface,

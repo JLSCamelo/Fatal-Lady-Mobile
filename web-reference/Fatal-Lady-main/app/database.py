@@ -24,7 +24,7 @@ if not DATABASE_URL:
     host = get_required_env("POSTGRES_HOST")
     port = get_required_env("POSTGRES_PORT")
     dbname = get_required_env("POSTGRES_DB")
-    DATABASE_URL = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
+    DATABASE_URL = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{dbname}"
 
 
 engine = create_engine(

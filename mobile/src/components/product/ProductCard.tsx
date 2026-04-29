@@ -4,11 +4,12 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 
 import { Produto } from "../../types/domain";
-import { colors, radius, shadows, spacing, typography } from "../../theme";
+import { colors, isCompactWidth, radius, shadows, spacing, typography } from "../../theme";
 import { formatCurrency } from "../../utils/format";
 
 interface ProductCardProps {
@@ -26,10 +27,16 @@ export function ProductCard({
   onFavoritePress,
   variant = "catalog",
 }: ProductCardProps) {
+  const { width } = useWindowDimensions();
   const isFeatured = variant === "featured";
+  const compact = isCompactWidth(width);
+  const cardWidth = isFeatured ? (compact ? 220 : 250) : Math.min(width - spacing.xl * 2, compact ? 264 : 252);
 
   return (
-    <Pressable style={[styles.card, isFeatured && styles.cardFeatured]} onPress={onPress}>
+    <Pressable
+      style={[styles.card, { width: cardWidth }, isFeatured && styles.cardFeatured]}
+      onPress={onPress}
+    >
       <View style={[styles.imageWrap, isFeatured && styles.imageWrapFeatured]}>
         <Image
           source={product.caminhoimagem}
@@ -80,7 +87,6 @@ export function ProductCard({
 
 const styles = StyleSheet.create({
   card: {
-    width: 240,
     minHeight: 320,
     borderRadius: 14,
     backgroundColor: colors.surface,

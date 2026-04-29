@@ -11,13 +11,32 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   container: {
-    padding: spacing.xl,
     gap: spacing.xl,
+    width: "100%",
+    maxWidth: 1180,
+    alignSelf: "center",
+    paddingVertical: spacing.xl,
   },
-  breadcrumb: {
-    color: colors.textMuted,
+  backLink: {
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    backgroundColor: colors.surface,
+  },
+  backLinkText: {
+    color: colors.primary,
     fontFamily: typography.body,
     fontSize: 13,
+  },
+  productLayout: {
+    gap: spacing.xl,
+  },
+  productLayoutWide: {
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
   imageCard: {
     backgroundColor: colors.surface,
@@ -25,10 +44,16 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
     ...shadows.card,
   },
+  imageCardWide: {
+    flex: 0.95,
+  },
   productImage: {
     width: "100%",
-    height: 360,
+    height: 340,
     backgroundColor: colors.surfaceAlt,
+  },
+  productImageWide: {
+    height: 620,
   },
   infoCard: {
     backgroundColor: colors.surface,
@@ -36,6 +61,9 @@ export const styles = StyleSheet.create({
     padding: spacing.xl,
     gap: spacing.lg,
     ...shadows.card,
+  },
+  infoCardWide: {
+    flex: 1.05,
   },
   category: {
     color: colors.primary,
@@ -151,10 +179,17 @@ export const styles = StyleSheet.create({
     fontSize: 17,
   },
   featureCard: {
+    flex: 1,
+    minWidth: 180,
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.lg,
     padding: spacing.lg,
     gap: spacing.xs,
+  },
+  featureGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.md,
   },
   featureTitle: {
     color: colors.text,
@@ -205,5 +240,24 @@ export const styles = StyleSheet.create({
   },
   modalButtons: {
     gap: spacing.md,
+  },
+  relatedSection: {
+    gap: spacing.lg,
+  },
+  relatedHeader: {
+    gap: spacing.xs,
+  },
+  relatedTitle: {
+    color: colors.text,
+    fontFamily: typography.titleSemi,
+    fontSize: 24,
+  },
+  relatedSubtitle: {
+    color: colors.textMuted,
+    fontFamily: typography.body,
+    fontSize: 14,
+  },
+  relatedList: {
+    gap: spacing.lg,
   },
 });
